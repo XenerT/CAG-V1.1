@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>CAG Dental iOS</title>
+    <title>CAG Dental v18.5 iOS</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
@@ -54,8 +54,14 @@
         .header-title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
         .header-avatar { width: 36px; height: 36px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
 
-        /* --- MAIN CONTENT --- */
-        .main-content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; /* Footer payı */ }
+        /* --- MAIN CONTENT (FIXED SCROLLING) --- */
+        .main-content { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 20px; 
+            padding-bottom: 120px; /* Daha fazla alt boşluk */
+            -webkit-overflow-scrolling: touch; /* iOS Smooth Scroll */
+        }
         .view-section { display: none; animation: slideIn 0.3s ease-out; }
         .view-section.active { display: block; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -67,11 +73,11 @@
         .stat-val { font-size: 24px; font-weight: 700; color: var(--primary); display: block; }
         .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
 
-        .patient-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .patient-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border); }
         .patient-item:last-child { border-bottom: none; }
         .p-info { display: flex; flex-direction: column; }
         .p-name { font-weight: 600; font-size: 16px; }
-        .p-detail { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+        .p-detail { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
         /* --- BOTTOM NAVIGATION (TAB BAR) --- */
         .bottom-nav {
@@ -103,7 +109,7 @@
             font-size: 28px; z-index: 90; border: none; cursor: pointer;
         }
 
-        /* --- MODAL (SLIDE UP SHEET) --- */
+        /* --- MODAL (SLIDE UP SHEET - DÜZELTİLDİ) --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 2000;
@@ -111,15 +117,29 @@
         }
         .modal-card {
             background: var(--bg-card);
-            width: 100%; height: 92vh;
+            width: 100%; 
+            height: 85vh; /* Yükseklik düşürüldü (Safe area için) */
             border-radius: 20px 20px 0 0;
             display: flex; flex-direction: column;
             animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         
-        .modal-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+        .modal-header { 
+            padding: 20px 25px; /* Padding artırıldı */
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid var(--border); 
+            background: var(--bg-card);
+            border-radius: 20px 20px 0 0;
+        }
+        .close-icon-box {
+            background: var(--bg-body);
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+        }
+        .modal-body { padding: 20px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
         
         /* FORM ELEMENTS */
         .form-group { margin-bottom: 15px; }
@@ -144,7 +164,7 @@
         .fc { font-family: 'Inter', sans-serif; }
         .fc-toolbar-title { font-size: 18px !important; }
         .fc-button { padding: 4px 8px !important; font-size: 12px !important; }
-        .fc-timegrid-slot { height: 50px !important; } /* Daha rahat dokunma alanı */
+        .fc-timegrid-slot { height: 50px !important; }
         
         .hidden { display: none !important; }
     </style>
@@ -197,7 +217,7 @@
                 </div>
                 <div class="ios-card" id="patient-list-container">
                     </div>
-            </div>
+                <div style="height: 50px;"></div> </div>
 
             <div id="view-finance" class="view-section">
                 <div class="ios-card" style="text-align:center; padding:40px 20px;">
@@ -246,7 +266,9 @@
         <div class="modal-card">
             <div class="modal-header">
                 <h3 style="margin:0;">İşlem</h3>
-                <i class="ph-bold ph-x" style="font-size:24px; cursor:pointer;" onclick="closeModal('patient-modal')"></i>
+                <div class="close-icon-box" onclick="closeModal('patient-modal')">
+                    <i class="ph-bold ph-x" style="font-size:18px;"></i>
+                </div>
             </div>
             <div class="modal-body">
                 <form id="patient-form" onsubmit="event.preventDefault(); savePatient()">
@@ -431,11 +453,11 @@
             document.getElementById("fin-total").innerText = "**** ₺";
         }
 
-        // --- CALENDAR (MOBILE OPTIMIZED) ---
+        // --- CALENDAR (MOBILE OPTIMIZED & TAP-TO-ADD) ---
         function initFullCalendar() {
             var calendarEl = document.getElementById('calendar');
             calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'timeGridDay', // Mobil için Günlük Görünüm en iyisi
+                initialView: 'timeGridDay', 
                 locale: 'tr',
                 headerToolbar: {
                     left: 'prev,next',
@@ -450,12 +472,24 @@
                 nowIndicator: true,
                 selectable: true,
                 editable: true,
-                longPressDelay: 300, // Mobil dokunma için
+                longPressDelay: 300, 
                 
+                // EVENT CLICKS
                 eventClick: function(info) { openEdit(info.event.id); },
+                
+                // DOKUNARAK EKLEME (FIXED)
+                dateClick: function(info) {
+                    // Tek dokunuşla ekleme
+                    const dateStr = info.dateStr.split('T')[0];
+                    const timeStr = info.dateStr.split('T')[1].substring(0,5);
+                    openAddModal(dateStr, timeStr);
+                },
                 select: function(info) {
+                    // Sürükleyerek seçim
                     openAddModal(info.startStr.split('T')[0], info.startStr.split('T')[1].substring(0,5));
                 },
+
+                // DRAG & DROP
                 eventDrop: async function(info) {
                     const newDate = info.event.start.toISOString().split('T')[0];
                     const newTime = info.event.start.toTimeString().split(' ')[0].substring(0,5);
@@ -491,7 +525,7 @@
             calendar.addEventSource(events);
         }
 
-        // --- PATIENT LIST (iOS Style) ---
+        // --- PATIENT LIST (FIXED SCROLL) ---
         window.renderPatientList = function() {
             const container = document.getElementById("patient-list-container");
             const filter = document.querySelector("#view-patients input").value.toLowerCase();
