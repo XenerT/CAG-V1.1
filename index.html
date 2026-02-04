@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>CAG Dental v15.0 Pro (TimeGrid Focus)</title>
+    <title>CAG Dental v16.0 Pro (Google Style)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
@@ -45,13 +45,13 @@
 
         /* MAIN CONTENT */
         .main-content { flex: 1; padding: 20px; overflow-y: auto; position: relative; width: 100%; display: flex; flex-direction: column; }
-        .view-section { display: none; animation: fadeIn 0.3s; flex: 1; }
+        .view-section { display: none; animation: fadeIn 0.3s; flex: 1; height: 100%; }
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* KARTLAR */
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 20px; height: calc(100vh - 100px); } /* Tam ekran yükseklik */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 20px; height: calc(100vh - 100px); }
         .card { background: var(--bg-card); border-radius: 16px; padding: 15px; border: 1px solid var(--border); box-shadow: var(--shadow); transition: background 0.3s; height: 100%; overflow: hidden; display: flex; flex-direction: column;}
         
         /* TABLO & MODAL */
@@ -93,7 +93,7 @@
         .suggestion-item:hover { background: var(--hover-bg); }
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 3000; display: none; justify-content: center; align-items: center; color: white; font-size: 20px; font-weight: bold; backdrop-filter: blur(2px); }
 
-        /* --- FullCalendar PRO Styling --- */
+        /* --- FullCalendar PRO Google Styling --- */
         .fc { 
             --fc-border-color: var(--border); 
             --fc-page-bg-color: var(--bg-card); 
@@ -103,24 +103,22 @@
             color: var(--text-main); 
             font-family: 'Inter', sans-serif;
         }
-        /* Saat Etiketleri */
-        .fc-timegrid-slot-label-cushion { font-size: 12px; color: var(--text-muted); font-weight: 500; }
-        .fc-col-header-cell-cushion { color: var(--text-main); font-weight: 600; padding: 10px 0; text-decoration: none !important; }
+        .fc-theme-standard td, .fc-theme-standard th { border-color: var(--border); }
         
-        /* Event Kutuları */
+        /* Event Stili - Yan Yana Çakışma İçin */
         .fc-event { 
             border: none; 
             border-radius: 4px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
             font-size: 11px; 
-            padding: 2px;
-            border-left: 4px solid rgba(0,0,0,0.2); /* Profesyonel sol çizgi */
+            padding: 1px;
+            margin: 1px; /* Kutular arası boşluk */
         }
-        .fc-event-main { color: white; font-weight: 500; padding: 2px 4px; }
-        .fc-v-event .fc-event-main-frame { height: 100%; }
+        .fc-v-event .fc-event-main { color: white; font-weight: 500; padding: 2px 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         
-        /* Grid Çizgileri */
-        .fc-theme-standard td, .fc-theme-standard th { border-color: var(--border); }
+        /* TimeGrid Çizgileri */
+        .fc-timegrid-slot { height: 3.5em !important; } /* Satır yüksekliği Google Cal gibi */
+        .fc-timegrid-slot-label-cushion { font-size: 12px; color: var(--text-muted); font-weight: 600; }
         
         /* Şimdi Çizgisi */
         .fc-timegrid-now-indicator-line { border-color: var(--danger); border-width: 2px; }
@@ -155,7 +153,7 @@
     <div id="login-screen" style="position:fixed; width:100%; height:100%; background: #000; display:flex; justify-content:center; align-items:center; z-index:999;">
         <div class="card" style="width:360px; text-align:center; padding:40px; border: 1px solid #333; height: auto;">
             <i class="ph-fill ph-tooth" style="font-size:48px; color:var(--primary);"></i>
-            <h2 style="margin:10px 0 30px; color:#fff;">CAG Dental v15.0</h2>
+            <h2 style="margin:10px 0 30px; color:#fff;">CAG Dental v16.0</h2>
             <form onsubmit="event.preventDefault(); login()">
                 <div style="margin-bottom:15px;"><input type="text" id="user" class="form-input" placeholder="Kullanıcı Adı" required></div>
                 <div style="margin-bottom:20px;"><input type="password" id="pass" class="form-input" placeholder="Şifre" required></div>
@@ -368,7 +366,10 @@
             onSnapshot(q, (snapshot) => {
                 patients = [];
                 snapshot.forEach((doc) => { let data = doc.data(); data.id = doc.id; patients.push(data); });
-                renderStats();
+                
+                // --- HATA DÜZELTME BURADA ---
+                // renderStats() kaldırıldı çünkü o HTML elementi artık yok.
+                
                 if(calendar) updateCalendarEvents();
                 document.getElementById("loader").style.display = "none";
                 if(document.getElementById('view-patients').classList.contains('active')) renderPatientTable();
@@ -376,11 +377,11 @@
             });
         }
 
-        // --- FULLCALENDAR PRO CONFIG ---
+        // --- FULLCALENDAR PRO CONFIG (GOOGLE STYLE) ---
         function initFullCalendar() {
             var calendarEl = document.getElementById('calendar');
             calendar = new FullCalendar.Calendar(calendarEl, {
-                // Varsayılan Görünüm: Haftalık (Saatli)
+                // Varsayılan Görünüm: Haftalık (TimeGrid)
                 initialView: 'timeGridWeek',
                 locale: 'tr',
                 
@@ -414,9 +415,9 @@
                 height: '100%',
                 nowIndicator: true, // Şu anki saati kırmızı çizgiyle göster
                 
-                // Çakışma Yönetimi (Profesyonel Görünüm)
+                // Çakışma Yönetimi (Profesyonel Görünüm: YAN YANA)
                 eventOverlap: true,
-                slotEventOverlap: false, // Çakışanları üst üste değil YAN YANA koy
+                slotEventOverlap: false, 
 
                 // 1. Randevuya Tıklama (Düzenleme)
                 eventClick: function(info) {
@@ -471,7 +472,7 @@
                     start: startT,
                     end: endT,
                     backgroundColor: doctorColors[p.doctor] || '#3788d8',
-                    borderColor: 'rgba(0,0,0,0)', // Kenarlık yok, temiz görünüm
+                    borderColor: 'rgba(0,0,0,0)', 
                     textColor: '#fff'
                 };
             });
