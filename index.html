@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>CAG Dental v14.5 Pro (Google Cal Style)</title>
+    <title>CAG Dental v15.0 Pro (TimeGrid Focus)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
@@ -44,90 +44,106 @@
         .theme-toggle { margin-top: auto; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-muted); padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
 
         /* MAIN CONTENT */
-        .main-content { flex: 1; padding: 30px; overflow-y: auto; position: relative; width: 100%; display: flex; flex-direction: column; }
+        .main-content { flex: 1; padding: 20px; overflow-y: auto; position: relative; width: 100%; display: flex; flex-direction: column; }
         .view-section { display: none; animation: fadeIn 0.3s; flex: 1; }
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* KARTLAR VE IZGARALAR */
+        /* KARTLAR */
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .dashboard-grid { display: grid; grid-template-columns: 3.5fr 1.2fr; gap: 25px; height: calc(100vh - 180px); }
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px; }
-        .card { background: var(--bg-card); border-radius: 16px; padding: 20px; border: 1px solid var(--border); box-shadow: var(--shadow); transition: background 0.3s; height: 100%; overflow: hidden; display: flex; flex-direction: column;}
-        .stat-card { display: flex; align-items: center; gap: 15px; cursor: pointer; transition: transform 0.2s; height: auto; }
-        .icon-box { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-
+        .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 20px; height: calc(100vh - 100px); } /* Tam ekran yükseklik */
+        .card { background: var(--bg-card); border-radius: 16px; padding: 15px; border: 1px solid var(--border); box-shadow: var(--shadow); transition: background 0.3s; height: 100%; overflow: hidden; display: flex; flex-direction: column;}
+        
         /* TABLO & MODAL */
         .data-table { width: 100%; border-collapse: collapse; }
         .data-table th { text-align: left; padding: 12px; color: var(--text-muted); font-size: 13px; border-bottom: 2px solid var(--border); background: var(--hover-bg); }
         .data-table td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--text-main); }
         .data-table tr:hover { background: var(--hover-bg); }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 200; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; }
         .modal-card { background: var(--bg-card); width: 95%; height: 95vh; border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); }
-        .modal-header { padding: 25px 40px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); }
+        .modal-header { padding: 20px 40px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); }
         .tabs-header { display: flex; gap: 20px; padding: 0 40px; background: var(--hover-bg); border-bottom: 1px solid var(--border); }
         .tab-btn { padding: 15px 0; background: none; border: none; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; font-size: 1.1rem; }
         .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
-        .modal-body { padding: 40px; overflow-y: auto; background: var(--bg-card); font-size: 1.1rem; }
+        .modal-body { padding: 30px 40px; overflow-y: auto; background: var(--bg-card); font-size: 1rem; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        .form-input { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box; background: var(--bg-card); color: var(--text-main); font-size: 1rem; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box; background: var(--bg-card); color: var(--text-main); font-size: 1rem; }
         .btn { padding: 8px 16px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 13px; transition: 0.2s; }
         .btn-primary { background: var(--primary); color: white; }
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
         .btn-danger { background: var(--danger); color: white; }
         .btn-warning { background: var(--warning); color: white; }
         .btn-action { background: var(--primary-light); color: var(--primary); }
-        .fab { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; border: none; box-shadow: 0 10px 15px rgba(0,0,0,0.3); z-index: 150; }
+        .fab { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; border: none; box-shadow: 0 10px 15px rgba(0,0,0,0.3); z-index: 1500; }
 
         /* DİŞLER */
-        .teeth-container { background: var(--hover-bg); padding: 20px; border-radius: 12px; border: 2px dashed var(--border); display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .teeth-container { background: var(--hover-bg); padding: 20px; border-radius: 12px; border: 2px dashed var(--border); display: flex; flex-direction: column; align-items: center; gap: 10px; }
         .teeth-row { display: flex; justify-content: center; gap: 4px; }
-        .tooth { width: 40px; height: 55px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px 8px 15px 15px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 10px; font-weight: bold; color: var(--text-muted); cursor: pointer; position: relative; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .jaw-upper .tooth { border-radius: 15px 15px 8px 8px; }
-        .tooth.selected { background: var(--primary); color: white; border-color: var(--primary-dark); animation: bounce 0.4s; }
+        .tooth { width: 35px; height: 50px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px 6px 12px 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 9px; font-weight: bold; color: var(--text-muted); cursor: pointer; transition: all 0.2s; }
+        .jaw-upper .tooth { border-radius: 12px 12px 6px 6px; }
+        .tooth.selected { background: var(--primary); color: white; border-color: var(--primary-dark); transform: scale(1.1); }
         .tooth.has-proc { border: 2px solid var(--purple); background: #f3e8ff; color: var(--purple); }
         body.dark-mode .tooth.has-proc { background: #3b0764; color: #d8b4fe; }
-        @keyframes bounce { 0% { transform: scale(1); } 50% { transform: scale(1.2) translateY(-5px); } 100% { transform: scale(1); } }
 
         .suggestions-box { position: absolute; background: var(--bg-card); border: 1px solid var(--border); width: 100%; max-height: 150px; overflow-y: auto; z-index: 50; border-radius: 0 0 8px 8px; display: none; }
         .suggestion-item { padding: 10px; cursor: pointer; font-size: 13px; border-bottom: 1px solid var(--border); }
         .suggestion-item:hover { background: var(--hover-bg); }
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: none; justify-content: center; align-items: center; color: white; font-size: 20px; font-weight: bold; backdrop-filter: blur(2px); }
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 3000; display: none; justify-content: center; align-items: center; color: white; font-size: 20px; font-weight: bold; backdrop-filter: blur(2px); }
 
-        /* FullCalendar Google Style CSS */
-        .fc { --fc-border-color: var(--border); --fc-page-bg-color: var(--bg-card); --fc-neutral-bg-color: var(--hover-bg); --fc-list-event-hover-bg-color: var(--hover-bg); color: var(--text-main); height: 100%; font-family: 'Inter', sans-serif;}
+        /* --- FullCalendar PRO Styling --- */
+        .fc { 
+            --fc-border-color: var(--border); 
+            --fc-page-bg-color: var(--bg-card); 
+            --fc-neutral-bg-color: var(--hover-bg); 
+            --fc-today-bg-color: var(--primary-light);
+            --fc-list-event-hover-bg-color: var(--hover-bg); 
+            color: var(--text-main); 
+            font-family: 'Inter', sans-serif;
+        }
+        /* Saat Etiketleri */
+        .fc-timegrid-slot-label-cushion { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+        .fc-col-header-cell-cushion { color: var(--text-main); font-weight: 600; padding: 10px 0; text-decoration: none !important; }
+        
+        /* Event Kutuları */
+        .fc-event { 
+            border: none; 
+            border-radius: 4px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+            font-size: 11px; 
+            padding: 2px;
+            border-left: 4px solid rgba(0,0,0,0.2); /* Profesyonel sol çizgi */
+        }
+        .fc-event-main { color: white; font-weight: 500; padding: 2px 4px; }
+        .fc-v-event .fc-event-main-frame { height: 100%; }
+        
+        /* Grid Çizgileri */
         .fc-theme-standard td, .fc-theme-standard th { border-color: var(--border); }
-        .fc-col-header-cell-cushion, .fc-daygrid-day-number, .fc-list-day-text, .fc-list-day-side-text { color: var(--text-main); text-decoration: none !important; }
-        .fc-event { cursor: pointer; border: none; font-size: 12px; border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .fc-timegrid-event { border-radius: 6px; }
-        .fc-toolbar-title { font-size: 1.2rem !important; color: var(--primary); }
-        .fc-button { background-color: var(--bg-card) !important; border-color: var(--border) !important; color: var(--text-main) !important; text-transform: capitalize; font-weight: 600 !important; }
+        
+        /* Şimdi Çizgisi */
+        .fc-timegrid-now-indicator-line { border-color: var(--danger); border-width: 2px; }
+        .fc-timegrid-now-indicator-arrow { border-color: var(--danger); border-width: 6px; }
+
+        /* Toolbar */
+        .fc-toolbar-title { font-size: 1.4rem !important; color: var(--primary); font-weight: 700; }
+        .fc-button { background-color: var(--bg-card) !important; border: 1px solid var(--border) !important; color: var(--text-main) !important; text-transform: capitalize; font-weight: 600 !important; box-shadow: none !important; }
+        .fc-button:hover { background-color: var(--hover-bg) !important; }
         .fc-button-active { background-color: var(--primary) !important; color: white !important; border-color: var(--primary) !important; }
-        .fc-day-today { background-color: var(--hover-bg) !important; }
-        /* NavLink (Gün sayısına tıklayınca) stil ayarı */
-        .fc-daygrid-day-number { font-size: 14px; font-weight: bold; padding: 8px; cursor: pointer; }
-        .fc-daygrid-day-number:hover { color: var(--primary); text-decoration: underline !important; }
 
-        /* --- MOBİL UYUMLULUK --- */
+        /* --- MOBİL --- */
         .mobile-menu-btn { display: none; font-size: 28px; color: var(--primary); cursor: pointer; margin-bottom: 20px; }
-
         @media (max-width: 768px) {
             .sidebar { position: fixed; top: 0; left: -280px; height: 100%; width: 260px; box-shadow: 5px 0 15px rgba(0,0,0,0.5); }
             .sidebar.active { left: 0; }
             .mobile-menu-btn { display: block; } 
-            .main-content { padding: 15px; width: 100%; }
-            .dashboard-grid { grid-template-columns: 1fr; height: auto; display: block; }
-            .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-            .form-grid { grid-template-columns: 1fr; }
+            .main-content { padding: 10px; }
+            .dashboard-grid { height: auto; display: block; }
             .modal-card { width: 95%; max-height: 90vh; }
             .teeth-row { flex-wrap: wrap; }
-            .card { overflow-x: auto; margin-bottom: 20px; }
+            .card { overflow-x: auto; margin-bottom: 20px; height: 600px; }
             .data-table { min-width: 600px; }
-            #calendar-container { height: 600px !important; }
         }
         .hidden { display: none !important; }
     </style>
@@ -137,9 +153,9 @@
     <div id="loader">Yükleniyor...</div>
 
     <div id="login-screen" style="position:fixed; width:100%; height:100%; background: #000; display:flex; justify-content:center; align-items:center; z-index:999;">
-        <div class="card" style="width:360px; text-align:center; padding:40px; border: 1px solid #333;">
+        <div class="card" style="width:360px; text-align:center; padding:40px; border: 1px solid #333; height: auto;">
             <i class="ph-fill ph-tooth" style="font-size:48px; color:var(--primary);"></i>
-            <h2 style="margin:10px 0 30px; color:#fff;">CAG Dental v14.5</h2>
+            <h2 style="margin:10px 0 30px; color:#fff;">CAG Dental v15.0</h2>
             <form onsubmit="event.preventDefault(); login()">
                 <div style="margin-bottom:15px;"><input type="text" id="user" class="form-input" placeholder="Kullanıcı Adı" required></div>
                 <div style="margin-bottom:20px;"><input type="password" id="pass" class="form-input" placeholder="Şifre" required></div>
@@ -172,46 +188,16 @@
                     <div id="current-doctor-name" style="font-weight:bold; color:var(--primary);">Dr. Talha Kuş</div>
                 </div>
                 
-                <div id="reminder-section" style="display:none; margin-bottom:20px; padding:15px; background:var(--primary-light); border-radius:12px; border:1px solid var(--primary);">
-                    <div style="font-weight:bold; color:var(--primary); margin-bottom:10px; display:flex; align-items:center; gap:8px;">
-                        <i class="ph-fill ph-alarm"></i> Yaklaşan Randevular (3 Saat İçinde)
-                    </div>
-                    <div id="reminder-list" style="display:flex; flex-direction:column; gap:8px;"></div>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="card stat-card" onclick="goToPatientsFilter('bekliyor')">
-                        <div class="icon-box" style="background:#0284c7; color:white;"><i class="ph-fill ph-users"></i></div>
-                        <div><h3 style="margin:0;" id="stat-active">0</h3><span>Bekleyen</span></div>
-                    </div>
-                    <div class="card stat-card" onclick="switchView('finance', document.querySelectorAll('.nav-item')[2])">
-                        <div class="icon-box" style="background:#16a34a; color:white;"><i class="ph-fill ph-currency-lira"></i></div>
-                        <div><h3 style="margin:0;" id="revenue-text">**** ₺</h3><span id="revenue-hidden" style="display:none;">0 ₺</span><span>Ciro</span></div>
-                    </div>
-                    <div class="card stat-card" onclick="calendar.changeView('timeGridDay'); calendar.today();">
-                        <div class="icon-box" style="background:#d97706; color:white;"><i class="ph-fill ph-calendar"></i></div>
-                        <div><h3 style="margin:0;" id="stat-today">0</h3><span>Bugün</span></div>
-                    </div>
-                    <div class="card stat-card" onclick="switchView('missed', document.querySelectorAll('.nav-item')[3])" style="border-left:4px solid var(--danger);">
-                        <div class="icon-box" style="background:#ef4444; color:white;"><i class="ph-fill ph-user-minus"></i></div>
-                        <div><h3 style="margin:0;" id="stat-missed">0</h3><span>Gelmeyen</span></div>
-                    </div>
-                </div>
-                
                 <div class="dashboard-grid">
-                    <div class="card" id="calendar-container" style="padding:10px;">
+                    <div class="card" id="calendar-container" style="padding:0;">
                         <div id="calendar"></div>
-                    </div>
-                    <div class="card" style="overflow-y:auto;">
-                        <h3 style="margin:0 0 15px 0; position:sticky; top:0; background:var(--bg-card); padding-bottom:10px; border-bottom:1px solid var(--border);">Bugünün Programı</h3>
-                        <div id="today-list" style="display:flex; flex-direction:column; gap:10px;"></div>
                     </div>
                 </div>
             </div>
 
             <div id="view-patients" class="view-section">
                 <div class="top-bar"><h2>Hasta Listesi</h2></div>
-                <div class="card">
+                <div class="card" style="height:auto;">
                     <input type="text" placeholder="Ara..." class="form-input" style="width:100%; margin-bottom:15px;" oninput="filterPatients(this.value)">
                     <div style="overflow-x:auto;">
                         <table class="data-table">
@@ -224,12 +210,12 @@
             
             <div id="view-finance" class="view-section">
                  <h2 style="margin-bottom:20px;">Finansal Rapor</h2>
-                 <div class="card"><p>Toplam Tahsilat: <strong id="fin-total" style="font-size:24px; color:var(--success);">0 ₺</strong></p></div>
+                 <div class="card" style="height:auto;"><p>Toplam Tahsilat: <strong id="fin-total" style="font-size:24px; color:var(--success);">0 ₺</strong></p></div>
             </div>
 
             <div id="view-missed" class="view-section">
                 <h2 style="margin-bottom:20px; color:var(--danger);">Gelmeyen Hastalar</h2>
-                <div class="card">
+                <div class="card" style="height:auto;">
                     <div style="overflow-x:auto;">
                         <table class="data-table">
                             <thead><tr><th>Ad Soyad</th><th>Tarih</th><th>İşlem</th></tr></thead>
@@ -241,7 +227,7 @@
 
             <div id="view-notes" class="view-section">
                 <h2 style="margin-bottom:20px;">Not Defteri</h2>
-                <div class="card">
+                <div class="card" style="height:auto;">
                     <textarea id="doctor-notes" style="width:100%; height:400px; padding:20px; border:none; background:transparent; outline:none; font-family:monospace; font-size:14px; color:var(--text-main);" placeholder="Not al..." oninput="saveNotes()"></textarea>
                 </div>
             </div>
@@ -382,7 +368,7 @@
             onSnapshot(q, (snapshot) => {
                 patients = [];
                 snapshot.forEach((doc) => { let data = doc.data(); data.id = doc.id; patients.push(data); });
-                processLogic(); renderStats(); renderToday(); 
+                renderStats();
                 if(calendar) updateCalendarEvents();
                 document.getElementById("loader").style.display = "none";
                 if(document.getElementById('view-patients').classList.contains('active')) renderPatientTable();
@@ -390,12 +376,15 @@
             });
         }
 
-        // FULLCALENDAR INIT (Google Takvim Tarzı Ayarlar)
+        // --- FULLCALENDAR PRO CONFIG ---
         function initFullCalendar() {
             var calendarEl = document.getElementById('calendar');
             calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
+                // Varsayılan Görünüm: Haftalık (Saatli)
+                initialView: 'timeGridWeek',
                 locale: 'tr',
+                
+                // Başlık Düzeni
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
@@ -404,40 +393,47 @@
                 buttonText: {
                     today: 'Bugün', month: 'Ay', week: 'Hafta', day: 'Gün'
                 },
-                navLinks: true, // Gün sayısına (10, 11) tıklayınca o güne git
-                navLinkDayClick: 'timeGridDay', // Tıklayınca saatlik görünüme geç
-                selectable: true, // Boş alanları seçilebilir yap
-                editable: true, // Sürükle bırak ve uzatma aktif
-                dayMaxEvents: true, // Çok olay varsa "+2 daha" göster
+
+                // Saat Ayarları (Gerçekçi görünüm için)
+                slotMinTime: '08:00:00', // Başlangıç 08:00
+                slotMaxTime: '22:00:00', // Bitiş 22:00
+                allDaySlot: false, // "Tüm Gün" satırını gizle
+                slotDuration: '00:15:00', // 15 DAKİKALIK ARALIKLAR (13:00, 13:15, 13:30...)
+                slotLabelInterval: '01:00', // Etiketler saat başı (09:00, 10:00)
+                slotLabelFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false // 24 saat formatı
+                },
+                
+                // Etkileşim Ayarları
+                selectable: true, // Fare ile tarama aktif
+                selectMirror: true, // Tararken "hayalet" kutucuk göster (Google Style)
+                editable: true, // Sürükle bırak ve uzat aktif
+                dayMaxEvents: true,
                 height: '100%',
-                slotMinTime: '08:00:00', // Takvim sabah 8'de başlasın
-                slotMaxTime: '21:00:00', // Akşam 9'da bitsin
-                allDaySlot: false, // "Tüm gün" satırını gizle
-                expandRows: true, // Yüksekliği doldur
+                nowIndicator: true, // Şu anki saati kırmızı çizgiyle göster
                 
-                // EVENTS
-                events: [], 
-                
+                // Çakışma Yönetimi (Profesyonel Görünüm)
+                eventOverlap: true,
+                slotEventOverlap: false, // Çakışanları üst üste değil YAN YANA koy
+
                 // 1. Randevuya Tıklama (Düzenleme)
                 eventClick: function(info) {
                     openEdit(info.event.id);
                 },
                 
-                // 2. Boş Saate Tıklama veya Tarama (Yeni Ekleme)
+                // 2. Boş Alan Seçimi (Yeni Randevu - Google Style)
                 select: function(info) {
                     const dateStr = info.startStr.split('T')[0];
                     const timeStr = info.startStr.split('T')[1].substring(0,5);
-                    let endTimeStr = info.endStr.split('T')[1].substring(0,5);
+                    const endTimeStr = info.endStr.split('T')[1].substring(0,5);
                     
-                    // Eğer sadece tıkladıysa (tarama yapmadıysa) bitişi +30dk yap
-                    if(info.start.getTime() === info.end.getTime()) {
-                         endTimeStr = timeFromMinutes(minutesFromTime(timeStr) + 30);
-                    }
-
+                    // Modalı seçilen saat aralığıyla aç
                     openAddModal(dateStr, timeStr, endTimeStr);
                 },
 
-                // 3. Sürükleyip Başka Saate/Güne Taşıma
+                // 3. Sürükle Bırak (Tarih/Saat Değişimi)
                 eventDrop: async function(info) {
                     const newDate = info.event.start.toISOString().split('T')[0];
                     const newTime = info.event.start.toTimeString().split(' ')[0].substring(0,5);
@@ -452,7 +448,7 @@
                     });
                 },
 
-                // 4. Aşağıdan Çekip Süreyi Uzatma (Resize)
+                // 4. Süre Uzatma (Resize - Google Style)
                 eventResize: async function(info) {
                     const newEndTime = info.event.end.toTimeString().split(' ')[0].substring(0,5);
                     await updateDoc(doc(db, "patients", info.event.id), {
@@ -475,7 +471,8 @@
                     start: startT,
                     end: endT,
                     backgroundColor: doctorColors[p.doctor] || '#3788d8',
-                    borderColor: doctorColors[p.doctor] || '#3788d8'
+                    borderColor: 'rgba(0,0,0,0)', // Kenarlık yok, temiz görünüm
+                    textColor: '#fff'
                 };
             });
             calendar.removeAllEvents();
@@ -569,7 +566,6 @@
         }
         function renderProcList() { document.getElementById("proc-list").innerHTML = Object.entries(tempTeeth).map(([k,v])=>`<div>#${k}: ${v.join(', ')}</div>`).join(''); }
 
-        // GÜNCELLEME: Modal Açılışında Saatleri Otomatik Doldurma
         window.openAddModal = function(d, t, et){ 
             resetForm(); 
             document.getElementById("patient-modal").style.display="flex"; 
@@ -601,90 +597,6 @@
         window.filterPatients = function(v){ const rows=document.querySelectorAll("#patient-table-body tr"); rows.forEach(r=>r.style.display=r.innerText.toLowerCase().includes(v.toLowerCase())?"":"none"); }
         window.goToPatientsFilter = function(s) { switchView('patients',document.querySelectorAll('.nav-item')[1]); filterPatients(s); document.querySelector('#view-patients input').value=s; }
         window.saveNotes = function(){ localStorage.setItem('doctorNotes', document.getElementById("doctor-notes").value); }
-
-        function processLogic() { checkReminders(); }
-
-        function checkReminders() {
-            const now = new Date();
-            const list = document.getElementById("reminder-list");
-            const section = document.getElementById("reminder-section");
-            list.innerHTML = "";
-            const upcoming = patients.filter(p => {
-                if (p.status !== 'bekliyor') return false;
-                const pDateTime = new Date(`${p.date}T${p.time}`);
-                const diffMins = (pDateTime - now) / (1000 * 60);
-                return diffMins > 0 && diffMins <= 180;
-            });
-            if (upcoming.length > 0) {
-                section.style.display = "block";
-                upcoming.sort((a, b) => a.time.localeCompare(b.time));
-                list.innerHTML = upcoming.map(p => `
-                    <div style="background:var(--bg-card); padding:10px; border-radius:8px; border-left:4px solid var(--primary); display:flex; justify-content:space-between; align-items:center;">
-                        <div><strong>${p.time}</strong> - ${p.name} ${p.surname}<div style="font-size:12px; color:var(--text-muted);">Dr. ${p.doctor}</div></div>
-                        <button class="btn btn-action" onclick="openEdit('${p.id}')">Görüntüle</button>
-                    </div>`).join('');
-            } else { section.style.display = "none"; }
-        }
-        function renderStats(){
-            document.getElementById("stat-active").innerText=patients.filter(p=>p.status==='bekliyor').length;
-            document.getElementById("stat-today").innerText=patients.filter(p=>p.date===new Date().toISOString().split('T')[0]).length;
-            document.getElementById("stat-missed").innerText=patients.filter(p=>p.status==='gelmedi').length;
-            const t=patients.reduce((a,b)=>a+(b.price||0),0);
-            document.getElementById("revenue-hidden").innerText=t+" ₺"; document.getElementById("fin-total").innerText=t+" ₺";
-        }
-        function renderToday(){
-            const l=document.getElementById("today-list"); const d=patients.filter(p=>p.date===new Date().toISOString().split('T')[0] && p.status!=='gelmedi').sort((a,b)=>a.time.localeCompare(b.time));
-            l.innerHTML=d.length?d.map(p=>`<div style="padding:15px; background:var(--bg-card); border:1px solid var(--border); border-left:4px solid ${getColor(p.status)}; cursor:pointer; border-radius:8px;" onclick="openEdit('${p.id}')"><b>${p.time} - ${p.name} ${p.surname}</b><br><small style="color:${doctorColors[p.doctor]||'var(--text-muted)'}; font-weight:bold;">${p.doctor}</small></div>`).join(''):'<div style="text-align:center; color:var(--text-muted);">Randevu yok.</div>';
-        }
-        
-        function renderPatientTable() {
-            const tbody = document.getElementById("patient-table-body");
-            tbody.innerHTML = patients.map(p => `
-                <tr onclick="openEdit('${p.id}')">
-                    <td>${p.name} ${p.surname}</td><td>${p.tc||'-'}</td><td>${p.date}</td>
-                    <td><span style="padding:4px 8px; border-radius:12px; font-size:11px; background:${getColor(p.status)}; color:white;">${p.status}</span></td>
-                    <td>
-                        <div style="display:flex; gap:5px;">
-                            <button class="btn btn-action" onclick="event.stopPropagation(); createNext('${p.id}')">Yeni+</button>
-                            <button class="btn btn-danger" onclick="event.stopPropagation(); deletePatient('${p.id}')">Sil</button>
-                        </div>
-                    </td>
-                </tr>`).join('');
-        }
-
-        function renderMissedTable() {
-            const tbody = document.getElementById("missed-table-body");
-            const missed = patients.filter(p => p.status === 'gelmedi');
-            document.getElementById("badge-missed").innerText = missed.length;
-            document.getElementById("badge-missed").style.display = missed.length > 0 ? 'inline-block' : 'none';
-            tbody.innerHTML = missed.length ? missed.map(p => `
-                <tr><td>${p.name} ${p.surname}</td><td style="color:var(--danger);">${p.date}</td><td>
-                    <button class="btn btn-warning" onclick="dismissMissed('${p.id}')">🔕 Kapat</button>
-                    <button class="btn btn-danger" onclick="deletePatient('${p.id}')">🗑️ Sil</button>
-                </td></tr>`).join('') : '<tr><td colspan="3" style="text-align:center;">Kayıt yok.</td></tr>';
-        }
-        function getColor(s){return s==='bitti'?'var(--success)':(s==='gelmedi'?'var(--danger)':'var(--warning)');}
-        
-        window.searchPatientByTC = function(val) {
-            val = val.replace(/[^0-9]/g, ''); document.getElementById("p-tc").value = val;
-            const box = document.getElementById("tc-suggestions");
-            if(val.length < 2) { box.style.display = 'none'; return; }
-            const unique = []; const map = new Map();
-            for (const item of patients) { if(item.tc && item.tc.startsWith(val) && !map.has(item.tc)){ map.set(item.tc, true); unique.push(item); } }
-            if(unique.length > 0) {
-                box.innerHTML = unique.map(p => `<div class="suggestion-item" onclick="fillP('${p.tc}')"><strong>${p.tc}</strong> - ${p.name} ${p.surname}</div>`).join('');
-                box.style.display = 'block';
-            } else { box.style.display = 'none'; }
-        }
-        window.fillP = function(tc) {
-            const p = patients.find(x => x.tc === tc);
-            if(p) {
-                document.getElementById("p-name").value = p.name; document.getElementById("p-surname").value = p.surname;
-                document.getElementById("p-phone").value = p.phone || ""; document.getElementById("p-tc").value = p.tc;
-                document.getElementById("tc-suggestions").style.display = 'none';
-            }
-        }
-        document.addEventListener('click', function(e) { if (!document.getElementById('tc-suggestions').contains(e.target) && e.target.id !== 'p-tc') document.getElementById('tc-suggestions').style.display = 'none'; });
     </script>
 </body>
 </html>
