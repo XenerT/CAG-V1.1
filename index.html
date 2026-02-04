@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>CAG Dental v14.0 - Pro Calendar</title>
+    <title>CAG Dental v14.5 Pro (Google Cal Style)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
@@ -98,15 +98,19 @@
         .suggestion-item:hover { background: var(--hover-bg); }
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: none; justify-content: center; align-items: center; color: white; font-size: 20px; font-weight: bold; backdrop-filter: blur(2px); }
 
-        /* FullCalendar Customization */
-        .fc { --fc-border-color: var(--border); --fc-page-bg-color: var(--bg-card); --fc-neutral-bg-color: var(--hover-bg); --fc-list-event-hover-bg-color: var(--hover-bg); color: var(--text-main); height: 100%; }
+        /* FullCalendar Google Style CSS */
+        .fc { --fc-border-color: var(--border); --fc-page-bg-color: var(--bg-card); --fc-neutral-bg-color: var(--hover-bg); --fc-list-event-hover-bg-color: var(--hover-bg); color: var(--text-main); height: 100%; font-family: 'Inter', sans-serif;}
         .fc-theme-standard td, .fc-theme-standard th { border-color: var(--border); }
         .fc-col-header-cell-cushion, .fc-daygrid-day-number, .fc-list-day-text, .fc-list-day-side-text { color: var(--text-main); text-decoration: none !important; }
-        .fc-event { cursor: pointer; border: none; font-size: 12px; }
+        .fc-event { cursor: pointer; border: none; font-size: 12px; border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .fc-timegrid-event { border-radius: 6px; }
         .fc-toolbar-title { font-size: 1.2rem !important; color: var(--primary); }
         .fc-button { background-color: var(--bg-card) !important; border-color: var(--border) !important; color: var(--text-main) !important; text-transform: capitalize; font-weight: 600 !important; }
         .fc-button-active { background-color: var(--primary) !important; color: white !important; border-color: var(--primary) !important; }
         .fc-day-today { background-color: var(--hover-bg) !important; }
+        /* NavLink (Gün sayısına tıklayınca) stil ayarı */
+        .fc-daygrid-day-number { font-size: 14px; font-weight: bold; padding: 8px; cursor: pointer; }
+        .fc-daygrid-day-number:hover { color: var(--primary); text-decoration: underline !important; }
 
         /* --- MOBİL UYUMLULUK --- */
         .mobile-menu-btn { display: none; font-size: 28px; color: var(--primary); cursor: pointer; margin-bottom: 20px; }
@@ -123,7 +127,7 @@
             .teeth-row { flex-wrap: wrap; }
             .card { overflow-x: auto; margin-bottom: 20px; }
             .data-table { min-width: 600px; }
-            #calendar-container { height: 500px !important; }
+            #calendar-container { height: 600px !important; }
         }
         .hidden { display: none !important; }
     </style>
@@ -135,7 +139,7 @@
     <div id="login-screen" style="position:fixed; width:100%; height:100%; background: #000; display:flex; justify-content:center; align-items:center; z-index:999;">
         <div class="card" style="width:360px; text-align:center; padding:40px; border: 1px solid #333;">
             <i class="ph-fill ph-tooth" style="font-size:48px; color:var(--primary);"></i>
-            <h2 style="margin:10px 0 30px; color:#fff;">CAG Dental v14.0</h2>
+            <h2 style="margin:10px 0 30px; color:#fff;">CAG Dental v14.5</h2>
             <form onsubmit="event.preventDefault(); login()">
                 <div style="margin-bottom:15px;"><input type="text" id="user" class="form-input" placeholder="Kullanıcı Adı" required></div>
                 <div style="margin-bottom:20px;"><input type="password" id="pass" class="form-input" placeholder="Şifre" required></div>
@@ -386,7 +390,7 @@
             });
         }
 
-        // FULLCALENDAR INIT
+        // FULLCALENDAR INIT (Google Takvim Tarzı Ayarlar)
         function initFullCalendar() {
             var calendarEl = document.getElementById('calendar');
             calendar = new FullCalendar.Calendar(calendarEl, {
@@ -395,29 +399,51 @@
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
                 buttonText: {
-                    today: 'Bugün', month: 'Ay', week: 'Hafta', day: 'Gün', list: 'Liste'
+                    today: 'Bugün', month: 'Ay', week: 'Hafta', day: 'Gün'
                 },
-                editable: true,
-                selectable: true,
-                dayMaxEvents: true,
+                navLinks: true, // Gün sayısına (10, 11) tıklayınca o güne git
+                navLinkDayClick: 'timeGridDay', // Tıklayınca saatlik görünüme geç
+                selectable: true, // Boş alanları seçilebilir yap
+                editable: true, // Sürükle bırak ve uzatma aktif
+                dayMaxEvents: true, // Çok olay varsa "+2 daha" göster
                 height: '100%',
+                slotMinTime: '08:00:00', // Takvim sabah 8'de başlasın
+                slotMaxTime: '21:00:00', // Akşam 9'da bitsin
+                allDaySlot: false, // "Tüm gün" satırını gizle
+                expandRows: true, // Yüksekliği doldur
+                
+                // EVENTS
                 events: [], 
+                
+                // 1. Randevuya Tıklama (Düzenleme)
                 eventClick: function(info) {
                     openEdit(info.event.id);
                 },
-                dateClick: function(info) {
-                    openAddModal(info.dateStr);
+                
+                // 2. Boş Saate Tıklama veya Tarama (Yeni Ekleme)
+                select: function(info) {
+                    const dateStr = info.startStr.split('T')[0];
+                    const timeStr = info.startStr.split('T')[1].substring(0,5);
+                    let endTimeStr = info.endStr.split('T')[1].substring(0,5);
+                    
+                    // Eğer sadece tıkladıysa (tarama yapmadıysa) bitişi +30dk yap
+                    if(info.start.getTime() === info.end.getTime()) {
+                         endTimeStr = timeFromMinutes(minutesFromTime(timeStr) + 30);
+                    }
+
+                    openAddModal(dateStr, timeStr, endTimeStr);
                 },
+
+                // 3. Sürükleyip Başka Saate/Güne Taşıma
                 eventDrop: async function(info) {
-                    // Sürükle bırak ile tarih değiştirme
                     const newDate = info.event.start.toISOString().split('T')[0];
                     const newTime = info.event.start.toTimeString().split(' ')[0].substring(0,5);
                     let newEndTime = null;
                     if(info.event.end) newEndTime = info.event.end.toTimeString().split(' ')[0].substring(0,5);
-                    else newEndTime = timeFromMinutes(minutesFromTime(newTime) + 30); // Varsayılan 30dk
+                    else newEndTime = timeFromMinutes(minutesFromTime(newTime) + 30);
 
                     await updateDoc(doc(db, "patients", info.event.id), {
                         date: newDate,
@@ -425,8 +451,9 @@
                         endTime: newEndTime
                     });
                 },
+
+                // 4. Aşağıdan Çekip Süreyi Uzatma (Resize)
                 eventResize: async function(info) {
-                    // Süre uzatma
                     const newEndTime = info.event.end.toTimeString().split(' ')[0].substring(0,5);
                     await updateDoc(doc(db, "patients", info.event.id), {
                         endTime: newEndTime
@@ -542,7 +569,17 @@
         }
         function renderProcList() { document.getElementById("proc-list").innerHTML = Object.entries(tempTeeth).map(([k,v])=>`<div>#${k}: ${v.join(', ')}</div>`).join(''); }
 
-        window.openAddModal = function(d){ resetForm(); document.getElementById("patient-modal").style.display="flex"; switchTab('tab-profile'); if(d)document.getElementById("p-date").value=d; }
+        // GÜNCELLEME: Modal Açılışında Saatleri Otomatik Doldurma
+        window.openAddModal = function(d, t, et){ 
+            resetForm(); 
+            document.getElementById("patient-modal").style.display="flex"; 
+            switchTab('tab-profile'); 
+            if(d) document.getElementById("p-date").value = d; 
+            if(t) document.getElementById("p-time").value = t;
+            if(et) document.getElementById("p-end-time").value = et;
+            else if(t) document.getElementById("p-end-time").value = timeFromMinutes(minutesFromTime(t) + 30);
+        }
+
         window.openEdit = function(id){
             const p=patients.find(x=>x.id==id);
             if(p){
@@ -600,7 +637,6 @@
             l.innerHTML=d.length?d.map(p=>`<div style="padding:15px; background:var(--bg-card); border:1px solid var(--border); border-left:4px solid ${getColor(p.status)}; cursor:pointer; border-radius:8px;" onclick="openEdit('${p.id}')"><b>${p.time} - ${p.name} ${p.surname}</b><br><small style="color:${doctorColors[p.doctor]||'var(--text-muted)'}; font-weight:bold;">${p.doctor}</small></div>`).join(''):'<div style="text-align:center; color:var(--text-muted);">Randevu yok.</div>';
         }
         
-        // HASTA LİSTESİ RENDER FONKSİYONU - SİL BUTONU EKLENDİ
         function renderPatientTable() {
             const tbody = document.getElementById("patient-table-body");
             tbody.innerHTML = patients.map(p => `
