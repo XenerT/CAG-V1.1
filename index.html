@@ -57,7 +57,7 @@
         .stat-card { display: flex; align-items: center; gap: 15px; cursor: pointer; transition: transform 0.2s; }
         .icon-box { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
 
-        /* TAKVİM (GÜNCELLEME: KAYDIRMA ÖZELLİĞİ) */
+        /* TAKVİM */
         .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .cal-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; }
         .cal-title { font-size: 16px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
@@ -516,7 +516,7 @@
         window.changeMonth = function(dir) { currentCalDate.setMonth(currentCalDate.getMonth() + dir); renderCalendar(); }
         window.goToday = function() { currentCalDate = new Date(); renderCalendar(); renderToday(); }
         
-        // GÜNCELLEME: Takvim render fonksiyonu hücre içi kaydırma desteği ile
+        // GÜNCELLEME: Takvim render fonksiyonu
         function renderCalendar() {
             const grid = document.getElementById("calendar-body"); grid.innerHTML = "";
             const year = currentCalDate.getFullYear(); const month = currentCalDate.getMonth();
@@ -528,7 +528,6 @@
                 const dStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
                 const dayPats = patients.filter(p => p.date === dStr && p.status !== 'gelmedi').sort((a,b)=>a.time.localeCompare(b.time));
                 
-                // GÜNCELLEME: Randevular tek satırda kalacak şekilde düzenlendi
                 let html = dayPats.map(p => `
                     <div class="cal-event status-${p.status}" 
                          onclick="event.stopPropagation(); openEdit('${p.id}')"
@@ -580,15 +579,23 @@
             const l=document.getElementById("today-list"); const d=patients.filter(p=>p.date===new Date().toISOString().split('T')[0] && p.status!=='gelmedi').sort((a,b)=>a.time.localeCompare(b.time));
             l.innerHTML=d.length?d.map(p=>`<div style="padding:15px; background:var(--bg-card); border:1px solid var(--border); border-left:4px solid ${getColor(p.status)}; cursor:pointer; border-radius:8px;" onclick="openEdit('${p.id}')"><b>${p.time} - ${p.name} ${p.surname}</b><br><small style="color:${doctorColors[p.doctor]||'var(--text-muted)'}; font-weight:bold;">${p.doctor}</small></div>`).join(''):'<div style="text-align:center; color:var(--text-muted);">Randevu yok.</div>';
         }
+        
+        // GÜNCELLEME: Hasta Listesine SİL Butonu Eklendi
         function renderPatientTable() {
             const tbody = document.getElementById("patient-table-body");
             tbody.innerHTML = patients.map(p => `
                 <tr onclick="openEdit('${p.id}')">
                     <td>${p.name} ${p.surname}</td><td>${p.tc||'-'}</td><td>${p.date}</td>
                     <td><span style="padding:4px 8px; border-radius:12px; font-size:11px; background:${getColor(p.status)}; color:white;">${p.status}</span></td>
-                    <td><button class="btn btn-action" onclick="event.stopPropagation(); createNext('${p.id}')">Yeni+</button></td>
+                    <td>
+                        <div style="display:flex; gap:5px;">
+                            <button class="btn btn-action" onclick="event.stopPropagation(); createNext('${p.id}')">Yeni+</button>
+                            <button class="btn btn-danger" onclick="event.stopPropagation(); deletePatient('${p.id}')">Sil</button>
+                        </div>
+                    </td>
                 </tr>`).join('');
         }
+
         function renderMissedTable() {
             const tbody = document.getElementById("missed-table-body");
             const missed = patients.filter(p => p.status === 'gelmedi');
