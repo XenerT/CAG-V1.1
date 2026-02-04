@@ -29,7 +29,7 @@
         }
 
         body { font-family: 'Inter', sans-serif; margin: 0; background-color: var(--bg-body); color: var(--text-main); height: 100vh; overflow: hidden; transition: background 0.3s; }
-        .app-layout { display: flex; height: 100vh; position: relative; } /* position relative eklendi */
+        .app-layout { display: flex; height: 100vh; position: relative; } 
         
         /* SIDEBAR (YAN MENÜ) */
         .sidebar { 
@@ -57,15 +57,42 @@
         .stat-card { display: flex; align-items: center; gap: 15px; cursor: pointer; transition: transform 0.2s; }
         .icon-box { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
 
-        /* TAKVİM */
+        /* TAKVİM (GÜNCELLEME: KAYDIRMA ÖZELLİĞİ) */
         .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .cal-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; }
         .cal-title { font-size: 16px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; width: 100%; }
         .day-header { background: var(--cal-head); text-align: center; padding: 10px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
-        .day-cell { min-height: 140px; background: var(--cal-bg); padding: 8px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
+        
+        .day-cell { 
+            height: 140px; 
+            background: var(--cal-bg); 
+            padding: 6px; 
+            cursor: pointer; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 4px; 
+            overflow-y: auto; 
+            border-bottom: 1px solid var(--border);
+        }
+        .day-cell::-webkit-scrollbar { width: 4px; }
+        .day-cell::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 10px; }
+        
+        .day-num { font-weight: bold; font-size: 12px; margin-bottom: 2px; display: block; }
         .day-cell.today { border: 2px solid var(--primary); }
-        .cal-event { font-size: 12px; padding: 4px 8px; border-radius: 6px; color: white; font-weight: 500; cursor: grab; display: flex; justify-content: space-between; flex-wrap: wrap; }
+        
+        .cal-event { 
+            font-size: 11px; 
+            padding: 3px 6px; 
+            border-radius: 4px; 
+            color: white; 
+            font-weight: 500; 
+            cursor: grab; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            display: block;
+        }
         .status-bekliyor { background: var(--warning); color: white; }
         .status-bitti { background: var(--success); color: white; }
         .status-late { background: var(--danger); animation: pulse 2s infinite; color: white; }
@@ -111,33 +138,23 @@
         .suggestion-item:hover { background: var(--hover-bg); }
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: none; justify-content: center; align-items: center; color: white; font-size: 20px; font-weight: bold; backdrop-filter: blur(2px); }
 
-        /* --- MOBİL UYUMLULUK (RESPONSIVE) --- */
+        /* --- MOBİL UYUMLULUK --- */
         .mobile-menu-btn { display: none; font-size: 28px; color: var(--primary); cursor: pointer; margin-bottom: 20px; }
 
         @media (max-width: 768px) {
-            /* Sidebar Gizleme ve Açma */
-            .sidebar { 
-                position: fixed; top: 0; left: -280px; height: 100%; width: 260px;
-                box-shadow: 5px 0 15px rgba(0,0,0,0.5); 
-            }
+            .sidebar { position: fixed; top: 0; left: -280px; height: 100%; width: 260px; box-shadow: 5px 0 15px rgba(0,0,0,0.5); }
             .sidebar.active { left: 0; }
-            
-            .mobile-menu-btn { display: block; } /* Menü butonu görünsün */
-            
+            .mobile-menu-btn { display: block; } 
             .main-content { padding: 15px; width: 100%; }
             .dashboard-grid { grid-template-columns: 1fr; }
             .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
             .form-grid { grid-template-columns: 1fr; }
-            
             .modal-card { width: 95%; max-height: 90vh; }
-            .cal-event span { display: none; } /* Mobilde saati gizle, sadece isim */
+            .cal-event span { display: none; } 
             .teeth-row { flex-wrap: wrap; }
-            
-            /* Mobilde tablo kaydırma */
             .card { overflow-x: auto; }
             .data-table { min-width: 600px; } 
         }
-
         .hidden { display: none !important; }
     </style>
 </head>
@@ -181,7 +198,6 @@
                     <div id="current-doctor-name" style="font-weight:bold; color:var(--primary);">Dr. Talha Kuş</div>
                 </div>
                 
-                <!-- Reminder Section -->
                 <div id="reminder-section" style="display:none; margin-bottom:20px; padding:15px; background:var(--primary-light); border-radius:12px; border:1px solid var(--primary);">
                     <div style="font-weight:bold; color:var(--primary); margin-bottom:10px; display:flex; align-items:center; gap:8px;">
                         <i class="ph-fill ph-alarm"></i> Yaklaşan Randevular (3 Saat İçinde)
@@ -334,7 +350,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // FIREBASE CONFIG (SENİN API LERİN)
         const firebaseConfig = {
             apiKey: "AIzaSyDIkIwrB3UgCCTucYR-EOS2MG8SLEiy_LA",
             authDomain: "cag-dental-3585.firebaseapp.com",
@@ -349,7 +364,7 @@
         try { const app = initializeApp(firebaseConfig); db = getFirestore(app); } catch(e) { console.error(e); }
 
         const users = {"Talha":"3585", "Kadir":"3585"};
-        const doctorColors = { "Talha Kuş": "#0284c7", "Kadir Doğan": "#d97706" }; // Blue, Amber
+        const doctorColors = { "Talha Kuş": "#0284c7", "Kadir Doğan": "#d97706" };
 
         function minutesFromTime(t) { if(!t) return 0; const [h,m]=t.split(':').map(Number); return h*60+m; }
         function timeFromMinutes(m) { const h=Math.floor(m/60); const mn=m%60; return `${String(h).padStart(2,'0')}:${String(mn).padStart(2,'0')}`; }
@@ -381,7 +396,6 @@
         window.toggleSidebar = function() { document.querySelector('.sidebar').classList.toggle('active'); }
         window.toggleSidebarIfMobile = function() { if(window.innerWidth <= 768) document.querySelector('.sidebar').classList.remove('active'); }
         
-        // Ekrana tıklayınca sidebari kapat
         document.addEventListener('click', function(e) {
             const sb = document.querySelector('.sidebar');
             const btn = document.querySelector('.mobile-menu-btn');
@@ -398,40 +412,6 @@
             if(id==='patients') renderPatientTable(); if(id==='finance') renderFinance(); if(id==='missed') renderMissedTable();
         }
         
-        function addTestPatients() {
-            const today = new Date();
-            const todayStr = today.toISOString().split('T')[0];
-            const nowMins = today.getHours() * 60 + today.getMinutes();
-            
-            // 1. Reminders (Yaklaşan randevular - Test)
-            // 20 dk sonra
-            patients.push({ id: 'test-rem-1', name: 'Test', surname: 'Anımsatıcı 1', date: todayStr, time: timeFromMinutes(nowMins + 20), endTime: timeFromMinutes(nowMins + 50), doctor: 'Talha Kuş', status: 'bekliyor' });
-            // 1 saat sonra
-            patients.push({ id: 'test-rem-2', name: 'Test', surname: 'Anımsatıcı 2', date: todayStr, time: timeFromMinutes(nowMins + 60), endTime: timeFromMinutes(nowMins + 90), doctor: 'Kadir Doğan', status: 'bekliyor' });
-
-            // 2. Scrolling & Calendar Density (Bugün için çoklu kayıt)
-            // 08:00 - 18:00 arası doldur
-            for(let i=0; i<25; i++) {
-                const h = 8 + Math.floor(i/2); 
-                if(h > 19) break;
-                const m = (i%2) * 30;
-                const startMins = h*60 + m;
-                const timeStr = timeFromMinutes(startMins);
-                
-                patients.push({
-                    id: `test-scroll-${i}`,
-                    name: `Test Hasta`,
-                    surname: `${i+1}`,
-                    date: todayStr,
-                    time: timeStr,
-                    endTime: timeFromMinutes(startMins + 30),
-                    doctor: i % 2 === 0 ? 'Talha Kuş' : 'Kadir Doğan',
-                    status: i < 8 ? 'bitti' : 'bekliyor',
-                    price: i < 8 ? 1500 : 0
-                });
-            }
-        }
-
         function startRealtimeListener() {
             if(!db) return;
             document.getElementById("loader").style.display = "flex";
@@ -439,10 +419,6 @@
             onSnapshot(q, (snapshot) => {
                 patients = [];
                 snapshot.forEach((doc) => { let data = doc.data(); data.id = doc.id; patients.push(data); });
-                
-                // TEST VERİLERİNİ ENJEKTE ET
-                addTestPatients();
-
                 processLogic(); renderStats(); renderCalendar(); renderToday(); 
                 document.getElementById("loader").style.display = "none";
                 if(document.getElementById('view-patients').classList.contains('active')) renderPatientTable();
@@ -452,23 +428,17 @@
 
         async function shiftAppointments(doctor, date, startTime, endTime, currentId) {
             let dailyApps = patients.filter(p => p.doctor === doctor && p.date === date && p.id !== currentId && p.status !== 'gelmedi');
-            
             const currentStartMins = minutesFromTime(startTime);
             dailyApps = dailyApps.filter(p => minutesFromTime(p.time) >= currentStartMins);
-            
             dailyApps.sort((a,b) => minutesFromTime(a.time) - minutesFromTime(b.time));
-
             let currentEndMins = minutesFromTime(endTime);
-            
             for (let app of dailyApps) {
                 let appStart = minutesFromTime(app.time);
                 let appEnd = app.endTime ? minutesFromTime(app.endTime) : (appStart + 30);
-                
                 if (appStart < currentEndMins) {
                     let duration = appEnd - appStart;
                     let newStart = currentEndMins;
                     let newEnd = newStart + duration;
-                    
                     await updateDoc(doc(db, "patients", app.id), {
                         time: timeFromMinutes(newStart),
                         endTime: timeFromMinutes(newEnd)
@@ -545,6 +515,8 @@
 
         window.changeMonth = function(dir) { currentCalDate.setMonth(currentCalDate.getMonth() + dir); renderCalendar(); }
         window.goToday = function() { currentCalDate = new Date(); renderCalendar(); renderToday(); }
+        
+        // GÜNCELLEME: Takvim render fonksiyonu hücre içi kaydırma desteği ile
         function renderCalendar() {
             const grid = document.getElementById("calendar-body"); grid.innerHTML = "";
             const year = currentCalDate.getFullYear(); const month = currentCalDate.getMonth();
@@ -555,7 +527,16 @@
             for(let i=1; i<=daysInMonth; i++) {
                 const dStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
                 const dayPats = patients.filter(p => p.date === dStr && p.status !== 'gelmedi').sort((a,b)=>a.time.localeCompare(b.time));
-                let html = dayPats.map(p => `<div class="cal-event status-${p.status}" draggable="true" ondragstart="drag(event, '${p.id}')" onclick="event.stopPropagation(); openEdit('${p.id}')"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${doctorColors[p.doctor]||'white'}; margin-right:4px;"></span><span>${p.time}-${p.endTime||'?'}</span> ${p.name}</div>`).join('');
+                
+                // GÜNCELLEME: Randevular tek satırda kalacak şekilde düzenlendi
+                let html = dayPats.map(p => `
+                    <div class="cal-event status-${p.status}" 
+                         onclick="event.stopPropagation(); openEdit('${p.id}')"
+                         draggable="true" ondragstart="drag(event, '${p.id}')">
+                         <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:${doctorColors[p.doctor]||'white'}; margin-right:4px;"></span>
+                         ${p.time} ${p.name}
+                    </div>`).join('');
+
                 const isToday = (i===new Date().getDate() && month===new Date().getMonth() && year===new Date().getFullYear()) ? 'today' : '';
                 grid.innerHTML += `<div class="day-cell ${isToday}" ondrop="drop(event, '${dStr}')" ondragover="allowDrop(event)" onclick="openAddModal('${dStr}')"><span class="day-num">${i}</span>${html}</div>`;
             }
@@ -565,46 +546,28 @@
         window.drag = function(e,id){e.dataTransfer.setData("text",id);} 
         window.drop = async function(e,d){ e.preventDefault(); const id=e.dataTransfer.getData("text"); await updateDoc(doc(db, "patients", id), { date: d }); }
 
-        function processLogic() {
-            const today = new Date(); today.setHours(0,0,0,0);
-            checkReminders();
-        }
+        function processLogic() { checkReminders(); }
 
         function checkReminders() {
             const now = new Date();
             const list = document.getElementById("reminder-list");
             const section = document.getElementById("reminder-section");
             list.innerHTML = "";
-            
             const upcoming = patients.filter(p => {
                 if (p.status !== 'bekliyor') return false;
-                const pDateStr = p.date; // YYYY-MM-DD
-                const pTimeStr = p.time; // HH:MM
-                if (!pDateStr || !pTimeStr) return false;
-                
-                const pDateTime = new Date(`${pDateStr}T${pTimeStr}`);
-                const diffMs = pDateTime - now;
-                const diffMins = diffMs / (1000 * 60);
-                
-                // Show if within next 3 hours (180 mins) and in the future
+                const pDateTime = new Date(`${p.date}T${p.time}`);
+                const diffMins = (pDateTime - now) / (1000 * 60);
                 return diffMins > 0 && diffMins <= 180;
             });
-
             if (upcoming.length > 0) {
                 section.style.display = "block";
                 upcoming.sort((a, b) => a.time.localeCompare(b.time));
                 list.innerHTML = upcoming.map(p => `
                     <div style="background:var(--bg-card); padding:10px; border-radius:8px; border-left:4px solid var(--primary); display:flex; justify-content:space-between; align-items:center;">
-                        <div>
-                            <strong>${p.time}</strong> - ${p.name} ${p.surname}
-                            <div style="font-size:12px; color:var(--text-muted);">Dr. ${p.doctor}</div>
-                        </div>
+                        <div><strong>${p.time}</strong> - ${p.name} ${p.surname}<div style="font-size:12px; color:var(--text-muted);">Dr. ${p.doctor}</div></div>
                         <button class="btn btn-action" onclick="openEdit('${p.id}')">Görüntüle</button>
-                    </div>
-                `).join('');
-            } else {
-                section.style.display = "none";
-            }
+                    </div>`).join('');
+            } else { section.style.display = "none"; }
         }
         function renderStats(){
             document.getElementById("stat-active").innerText=patients.filter(p=>p.status==='bekliyor').length;
@@ -613,8 +576,6 @@
             const t=patients.reduce((a,b)=>a+(b.price||0),0);
             document.getElementById("revenue-hidden").innerText=t+" ₺"; document.getElementById("fin-total").innerText=t+" ₺";
         }
-        window.toggleRevenue = function(){ const e=document.getElementById("revenue-text"); e.innerText=e.innerText.includes("*")?document.getElementById("revenue-hidden").innerText:"**** ₺"; }
-        
         function renderToday(){
             const l=document.getElementById("today-list"); const d=patients.filter(p=>p.date===new Date().toISOString().split('T')[0] && p.status!=='gelmedi').sort((a,b)=>a.time.localeCompare(b.time));
             l.innerHTML=d.length?d.map(p=>`<div style="padding:15px; background:var(--bg-card); border:1px solid var(--border); border-left:4px solid ${getColor(p.status)}; cursor:pointer; border-radius:8px;" onclick="openEdit('${p.id}')"><b>${p.time} - ${p.name} ${p.surname}</b><br><small style="color:${doctorColors[p.doctor]||'var(--text-muted)'}; font-weight:bold;">${p.doctor}</small></div>`).join(''):'<div style="text-align:center; color:var(--text-muted);">Randevu yok.</div>';
@@ -684,7 +645,6 @@
         window.filterPatients = function(v){ const rows=document.querySelectorAll("#patient-table-body tr"); rows.forEach(r=>r.style.display=r.innerText.toLowerCase().includes(v.toLowerCase())?"":"none"); }
         window.goToPatientsFilter = function(s) { switchView('patients',document.querySelectorAll('.nav-item')[1]); filterPatients(s); document.querySelector('#view-patients input').value=s; }
         window.saveNotes = function(){ localStorage.setItem('doctorNotes', document.getElementById("doctor-notes").value); }
-
     </script>
 </body>
 </html>
