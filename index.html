@@ -4,31 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>CAG Dental v18.5 iOS</title>
+    <title>CAG Dental v19.0 (Final Mobile Fix)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
     
     <style>
         :root {
-            --primary: #f59e0b; /* Talha - Turuncu */
-            --primary-bg: #fff7ed;
-            --bg-body: #f2f2f7; /* iOS Gri Arkaplan */
+            --primary: #f59e0b; /* Talha Turuncusu */
+            --bg-body: #f2f2f7;
             --bg-card: #ffffff;
             --text-main: #000000;
             --text-muted: #8e8e93;
-            --border: #c6c6c8;
+            --border: #d1d1d6;
             --danger: #ff3b30;
             --success: #34c759;
-            --radius: 12px;
-            --safe-top: env(safe-area-inset-top);
             --safe-bottom: env(safe-area-inset-bottom);
         }
 
         body.dark-mode {
             --primary: #fbbf24;
-            --primary-bg: #2c2005;
             --bg-body: #000000;
             --bg-card: #1c1c1e;
             --text-main: #ffffff;
@@ -37,202 +32,172 @@
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-body); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
-
-        /* --- LOGIN SCREEN --- */
-        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .login-card { background: var(--bg-card); width: 100%; max-width: 350px; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         
-        /* --- HEADER (iOS Style) --- */
+        body { 
+            margin: 0; padding: 0;
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg-body); color: var(--text-main); 
+            height: 100vh; width: 100vw;
+            overflow: hidden; /* Sayfanın kendisi kaymasın */
+            display: flex; flex-direction: column;
+        }
+
+        /* --- HEADER --- */
         .ios-header {
-            padding: calc(var(--safe-top) + 10px) 20px 15px 20px;
+            flex-shrink: 0; /* Asla küçülme */
+            height: 60px;
             background: var(--bg-card);
             border-bottom: 1px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 50;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px;
+            font-weight: 700; font-size: 20px;
+            z-index: 50;
         }
-        .header-title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-        .header-avatar { width: 36px; height: 36px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
 
-        /* --- MAIN CONTENT (FIXED SCROLLING) --- */
-        .main-content { 
-            flex: 1; 
-            overflow-y: auto; 
-            padding: 20px; 
-            padding-bottom: 120px; /* Daha fazla alt boşluk */
+        /* --- MAIN CONTENT (SCROLL FIX) --- */
+        .main-content {
+            flex: 1; /* Kalan tüm alanı kapla */
+            overflow-y: auto; /* Sadece burası kaysın */
             -webkit-overflow-scrolling: touch; /* iOS Smooth Scroll */
+            padding: 15px;
+            padding-bottom: 150px !important; /* Menü ve FAB için devasa boşluk */
+            position: relative;
         }
-        .view-section { display: none; animation: slideIn 0.3s ease-out; }
-        .view-section.active { display: block; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.2s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* --- CARDS & LISTS --- */
-        .ios-card { background: var(--bg-card); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .stat-box { background: var(--bg-card); padding: 16px; border-radius: var(--radius); text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .stat-val { font-size: 24px; font-weight: 700; color: var(--primary); display: block; }
-        .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+        .ios-card { 
+            background: var(--bg-card); 
+            border-radius: 12px; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+        }
 
-        .patient-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border); }
+        .patient-item { 
+            padding: 15px 0; 
+            border-bottom: 1px solid var(--border); 
+            display: flex; justify-content: space-between; align-items: center;
+        }
         .patient-item:last-child { border-bottom: none; }
-        .p-info { display: flex; flex-direction: column; }
-        .p-name { font-weight: 600; font-size: 16px; }
-        .p-detail { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
-
-        /* --- BOTTOM NAVIGATION (TAB BAR) --- */
+        
+        /* --- BOTTOM NAV --- */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%;
+            flex-shrink: 0;
+            height: calc(60px + var(--safe-bottom));
             background: var(--bg-card);
             border-top: 1px solid var(--border);
-            padding-bottom: var(--safe-bottom);
-            height: calc(60px + var(--safe-bottom));
-            display: flex; justify-content: space-around; align-items: center;
-            z-index: 100; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: flex; justify-content: space-around; align-items: flex-start;
+            padding-top: 10px;
+            z-index: 100;
         }
         .nav-btn {
             background: none; border: none;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: var(--text-muted); font-size: 10px; font-weight: 500; gap: 4px;
-            width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center;
+            font-size: 10px; color: var(--text-muted); gap: 4px;
         }
-        .nav-btn i { font-size: 24px; margin-bottom: 2px; transition: 0.2s; }
         .nav-btn.active { color: var(--primary); }
-        .nav-btn.active i { transform: translateY(-2px); }
+        .nav-btn i { font-size: 24px; }
 
-        /* --- FAB (Floating Action Button) --- */
+        /* --- FAB --- */
         .fab {
             position: fixed; bottom: calc(80px + var(--safe-bottom)); right: 20px;
-            width: 56px; height: 56px;
+            width: 60px; height: 60px;
             background: var(--primary); color: white;
-            border-radius: 50%; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+            border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             display: flex; align-items: center; justify-content: center;
-            font-size: 28px; z-index: 90; border: none; cursor: pointer;
+            font-size: 30px; border: none; z-index: 90;
         }
 
-        /* --- MODAL (SLIDE UP SHEET - DÜZELTİLDİ) --- */
+        /* --- MODAL (TAM EKRAN GİBİ AMA GÜVENLİ) --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 2000;
-            display: none; align-items: flex-end; /* Bottom alignment */
+            display: none; align-items: flex-end;
         }
         .modal-card {
             background: var(--bg-card);
-            width: 100%; 
-            height: 85vh; /* Yükseklik düşürüldü (Safe area için) */
+            width: 100%; height: 90vh; /* Ekranın %90'ı */
             border-radius: 20px 20px 0 0;
             display: flex; flex-direction: column;
-            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: slideUp 0.3s;
         }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        
-        .modal-header { 
-            padding: 20px 25px; /* Padding artırıldı */
-            display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: 1px solid var(--border); 
-            background: var(--bg-card);
-            border-radius: 20px 20px 0 0;
+
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--bg-card); border-radius: 20px 20px 0 0;
         }
-        .close-icon-box {
-            background: var(--bg-body);
-            width: 32px; height: 32px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
-        }
-        .modal-body { padding: 20px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
-        
-        /* FORM ELEMENTS */
-        .form-group { margin-bottom: 15px; }
-        .form-label { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; display: block; }
+        .modal-body { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 50px; }
+
+        /* Form Elemanları */
         .form-input { 
-            width: 100%; padding: 14px; 
-            background: var(--bg-body); border: none; border-radius: 10px; 
-            font-size: 16px; /* 16px prevents iOS zoom */
-            color: var(--text-main);
+            width: 100%; padding: 12px; margin-bottom: 15px; 
+            background: var(--bg-body); border: 1px solid var(--border); 
+            border-radius: 8px; font-size: 16px; color: var(--text-main);
         }
-        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-size: 16px; font-weight: 600; margin-top: 10px; cursor: pointer; }
+        .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-size: 16px; font-weight: bold; margin-bottom: 10px; }
         .btn-primary { background: var(--primary); color: white; }
-        .btn-danger { background: var(--danger); color: white; margin-top: 10px;}
+        .btn-secondary { background: var(--bg-body); color: var(--text-main); border: 1px solid var(--border); }
+        .btn-danger { background: var(--danger); color: white; }
 
-        /* TEETH CHART (Mobile Optimized) */
-        .teeth-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; padding: 10px; background: var(--bg-body); border-radius: 12px; }
-        .tooth { width: 38px; height: 38px; background: var(--bg-card); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; border: 1px solid var(--border); }
-        .tooth.selected { background: var(--primary); color: white; border-color: var(--primary); }
-        .tooth.has-proc { border: 2px solid #8b5cf6; background: #f3e8ff; color: #8b5cf6; }
-
-        /* FULLCALENDAR MOBILE TWEAKS */
+        /* FullCalendar Fixes */
         .fc { font-family: 'Inter', sans-serif; }
         .fc-toolbar-title { font-size: 18px !important; }
-        .fc-button { padding: 4px 8px !important; font-size: 12px !important; }
-        .fc-timegrid-slot { height: 50px !important; }
-        
+        .fc-timegrid-slot { height: 60px !important; } /* Dokunması kolay olsun diye geniş */
+
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div id="loader" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:3000;display:flex;justify-content:center;align-items:center;color:white;">Yükleniyor...</div>
-
-    <div id="login-screen">
-        <div class="login-card">
-            <i class="ph-fill ph-tooth" style="font-size:50px; color:var(--primary); margin-bottom:20px;"></i>
-            <h2 style="margin-bottom:30px;">CAG Dental</h2>
+    <div id="login-screen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg-body);z-index:9999;display:flex;align-items:center;justify-content:center;">
+        <div class="ios-card" style="width:300px; text-align:center;">
+            <i class="ph-fill ph-tooth" style="font-size:48px; color:var(--primary);"></i>
+            <h2>CAG Dental</h2>
             <form onsubmit="event.preventDefault(); login()">
-                <div class="form-group"><input type="text" id="user" class="form-input" placeholder="Kullanıcı Adı" style="background:#f2f2f7;"></div>
-                <div class="form-group"><input type="password" id="pass" class="form-input" placeholder="Şifre" style="background:#f2f2f7;"></div>
+                <input type="text" id="user" class="form-input" placeholder="Kullanıcı Adı">
+                <input type="password" id="pass" class="form-input" placeholder="Şifre">
                 <button class="btn btn-primary">Giriş Yap</button>
             </form>
         </div>
     </div>
 
     <div id="app-layout" class="hidden">
-        
         <header class="ios-header">
-            <div class="header-title" id="page-title">Takvim</div>
-            <div class="header-avatar" id="avatar-initials">TK</div>
+            <span id="page-title">Takvim</span>
+            <span id="dr-avatar" style="background:var(--primary); color:white; width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:50%; font-size:12px;">TK</span>
         </header>
 
         <main class="main-content">
-            
             <div id="view-dashboard" class="view-section active">
-                <div class="ios-card" style="height: calc(100vh - 220px); overflow:hidden; padding:0;">
+                <div class="ios-card" style="height: 100vh; padding:0; overflow:hidden;">
                     <div id="calendar" style="height:100%;"></div>
-                </div>
-                
-                <div class="stat-grid">
-                    <div class="stat-box" onclick="calendar.today()">
-                        <span class="stat-val" id="stat-today">0</span>
-                        <span class="stat-label">Bugün</span>
-                    </div>
-                    <div class="stat-box">
-                        <span class="stat-val" id="stat-active">0</span>
-                        <span class="stat-label">Bekleyen</span>
-                    </div>
                 </div>
             </div>
 
             <div id="view-patients" class="view-section">
-                <div class="form-group">
-                    <input type="text" class="form-input" placeholder="Hasta Ara (Ad, TC)..." oninput="filterPatients(this.value)">
-                </div>
+                <input type="text" class="form-input" placeholder="Hasta Ara..." oninput="filterPatients(this.value)">
                 <div class="ios-card" id="patient-list-container">
                     </div>
-                <div style="height: 50px;"></div> </div>
+            </div>
 
             <div id="view-finance" class="view-section">
-                <div class="ios-card" style="text-align:center; padding:40px 20px;">
-                    <span style="font-size:14px; color:var(--text-muted);">Toplam Ciro</span>
-                    <h1 style="font-size:36px; color:var(--success); margin:10px 0;" id="fin-total">0 ₺</h1>
-                    <button class="btn" style="background:var(--bg-body); color:var(--text-main);" onclick="toggleRevenue()" id="revenue-btn">Gizle / Göster</button>
+                <div class="ios-card" style="text-align:center; padding:30px;">
+                    <small>Toplam Ciro</small>
+                    <h1 id="fin-total" style="color:var(--success); font-size:32px; margin:10px 0;">**** ₺</h1>
+                    <button class="btn btn-secondary" onclick="toggleRevenue()">Göster / Gizle</button>
                 </div>
             </div>
 
             <div id="view-more" class="view-section">
                 <div class="ios-card">
-                    <h3 style="margin-top:0;">Ayarlar</h3>
-                    <button class="btn" style="background:var(--bg-body); color:var(--text-main); margin-bottom:10px;" onclick="toggleDarkMode()">
-                        <i class="ph-fill ph-moon"></i> Tema Değiştir
-                    </button>
+                    <button class="btn btn-secondary" onclick="toggleDarkMode()">Tema Değiştir</button>
                     <button class="btn btn-danger" onclick="logoutLogic()">Çıkış Yap</button>
                 </div>
                 <div class="ios-card">
@@ -240,14 +205,13 @@
                     <div id="missed-list-container"></div>
                 </div>
             </div>
-
         </main>
 
-        <button class="fab" onclick="openAddModal()"><i class="ph-bold ph-plus"></i></button>
+        <button class="fab" onclick="openAddModal()">+</button>
 
         <nav class="bottom-nav">
             <button class="nav-btn active" onclick="switchView('dashboard', this)">
-                <i class="ph-fill ph-calendar-blank"></i> Takvim
+                <i class="ph-fill ph-calendar"></i> Takvim
             </button>
             <button class="nav-btn" onclick="switchView('patients', this)">
                 <i class="ph-fill ph-users"></i> Hastalar
@@ -256,101 +220,63 @@
                 <i class="ph-fill ph-currency-lira"></i> Finans
             </button>
             <button class="nav-btn" onclick="switchView('more', this)">
-                <i class="ph-fill ph-dots-three-circle"></i> Diğer
+                <i class="ph-fill ph-dots-three"></i> Diğer
             </button>
         </nav>
-
     </div>
 
     <div id="patient-modal" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header">
-                <h3 style="margin:0;">İşlem</h3>
-                <div class="close-icon-box" onclick="closeModal('patient-modal')">
-                    <i class="ph-bold ph-x" style="font-size:18px;"></i>
+                <h3>İşlem Yap</h3>
+                <div onclick="closeModal('patient-modal')" style="background:#ddd; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                    <i class="ph-bold ph-x"></i>
                 </div>
             </div>
             <div class="modal-body">
                 <form id="patient-form" onsubmit="event.preventDefault(); savePatient()">
                     <input type="hidden" id="p-id">
+                    <label>TC Kimlik</label>
+                    <input type="tel" id="p-tc" class="form-input" maxlength="11" oninput="searchPatientByTC(this.value)">
                     
-                    <div class="form-group">
-                        <label class="form-label">TC Kimlik & Otomatik Arama</label>
-                        <input type="tel" id="p-tc" class="form-input" maxlength="11" oninput="searchPatientByTC(this.value)" autocomplete="off">
-                    </div>
-
                     <div style="display:flex; gap:10px;">
-                        <div class="form-group" style="flex:1;">
-                            <label class="form-label">Ad</label>
-                            <input type="text" id="p-name" class="form-input" required>
-                        </div>
-                        <div class="form-group" style="flex:1;">
-                            <label class="form-label">Soyad</label>
-                            <input type="text" id="p-surname" class="form-input" required>
-                        </div>
+                        <input type="text" id="p-name" class="form-input" placeholder="Ad" required>
+                        <input type="text" id="p-surname" class="form-input" placeholder="Soyad" required>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Tarih</label>
+                    <label>Tarih & Saat</label>
+                    <div style="display:flex; gap:10px;">
                         <input type="date" id="p-date" class="form-input" required>
+                        <input type="time" id="p-time" class="form-input" required onchange="autoSetEndTime()">
+                        <input type="time" id="p-end-time" class="form-input">
                     </div>
 
-                    <div style="display:flex; gap:10px;">
-                        <div class="form-group" style="flex:1;">
-                            <label class="form-label">Başlangıç</label>
-                            <input type="time" id="p-time" class="form-input" required onchange="autoSetEndTime()">
-                        </div>
-                        <div class="form-group" style="flex:1;">
-                            <label class="form-label">Bitiş</label>
-                            <input type="time" id="p-end-time" class="form-input">
-                        </div>
-                    </div>
+                    <label>Hekim</label>
+                    <select id="p-doctor" class="form-input">
+                        <option>Talha Kuş</option>
+                        <option>Kadir Doğan</option>
+                    </select>
 
-                    <div class="form-group">
-                        <label class="form-label">Hekim</label>
-                        <select id="p-doctor" class="form-input">
-                            <option>Talha Kuş</option>
-                            <option>Kadir Doğan</option>
-                        </select>
-                    </div>
+                    <label>Durum</label>
+                    <select id="p-status" class="form-input" onchange="toggleFin(this.value)">
+                        <option value="bekliyor">Bekliyor</option>
+                        <option value="bitti">Bitti</option>
+                        <option value="iptal">İptal</option>
+                    </select>
 
-                    <div class="form-group">
-                        <label class="form-label">Durum</label>
-                        <select id="p-status" class="form-input" onchange="toggleFin(this.value)">
-                            <option value="bekliyor">Bekliyor</option>
-                            <option value="bitti">Bitti</option>
-                            <option value="iptal">İptal</option>
-                        </select>
-                    </div>
-
-                    <div id="fin-box" class="form-group hidden">
-                        <label class="form-label">Tutar (₺)</label>
+                    <div id="fin-box" class="hidden">
+                        <label>Tutar (TL)</label>
                         <input type="number" id="p-price" class="form-input">
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Diş Seçimi & İşlem</label>
-                        <div class="teeth-container">
-                            </div>
-                        <div id="tooth-action" class="hidden" style="margin-top:10px; background:var(--bg-body); padding:10px; border-radius:8px;">
-                            <strong id="sel-tooth-lbl"></strong>
-                            <div style="display:flex; gap:5px; margin-top:5px;">
-                                <select id="tooth-proc" class="form-input" style="padding:8px;"><option>Dolgu</option><option>Kanal</option><option>İmplant</option><option>Çekim</option></select>
-                                <button type="button" class="btn btn-primary" style="width:auto; margin:0;" onclick="assignProc()">+</button>
-                            </div>
-                        </div>
-                        <div id="proc-list" style="margin-top:5px; font-size:12px; color:var(--text-muted);"></div>
-                    </div>
+                    <label>Notlar</label>
+                    <textarea id="p-notes" class="form-input"></textarea>
 
-                    <div class="form-group">
-                        <label class="form-label">Notlar</label>
-                        <textarea id="p-notes" class="form-input" rows="3"></textarea>
-                    </div>
-
-                    <button class="btn btn-primary">Kaydet</button>
-                    <button type="button" class="btn btn-danger hidden" id="btn-delete" onclick="deleteCurrentP()">Sil</button>
+                    <button class="btn btn-primary">KAYDET</button>
+                    <button type="button" class="btn btn-danger hidden" id="btn-delete" onclick="deleteCurrentP()">SİL</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('patient-modal')">VAZGEÇ / KAPAT</button>
                 </form>
-                <div style="height:100px;"></div> </div>
+            </div>
         </div>
     </div>
 
@@ -368,102 +294,84 @@
             measurementId: "G-XLBMJZDZBZ"
         };
 
-        let db;
-        try { const app = initializeApp(firebaseConfig); db = getFirestore(app); } catch(e) { console.error(e); }
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
         const users = {"Talha":"3585", "Kadir":"3585"};
         const doctorColors = { "Talha Kuş": "#f59e0b", "Kadir Doğan": "#3b82f6" };
 
+        let patients = [];
+        let currentDoctor = "Talha Kuş";
+        let calendar;
+
+        // HELPER FUNCTIONS
         function minutesFromTime(t) { if(!t) return 0; const [h,m]=t.split(':').map(Number); return h*60+m; }
         function timeFromMinutes(m) { const h=Math.floor(m/60); const mn=m%60; return `${String(h).padStart(2,'0')}:${String(mn).padStart(2,'0')}`; }
 
-        let patients = []; 
-        let currentDoctor = "Talha Kuş";
-        let activeTooth=null, tempTeeth={};
-        let calendar;
-
-        // --- GLOBAL WINDOW FUNCTIONS ---
         window.login = function() {
-            const u = document.getElementById("user").value; const p = document.getElementById("pass").value;
+            const u = document.getElementById("user").value;
+            const p = document.getElementById("pass").value;
             if(users[u] && users[u]===p) {
                 currentDoctor = u === "Talha" ? "Talha Kuş" : "Kadir Doğan";
-                document.getElementById("avatar-initials").innerText = currentDoctor === "Talha Kuş" ? "TK" : "KD";
+                document.getElementById("dr-avatar").innerText = u === "Talha" ? "TK" : "KD";
                 document.getElementById("login-screen").classList.add("hidden");
                 document.getElementById("app-layout").classList.remove("hidden");
-                startRealtimeListener(); initUI(); initFullCalendar();
+                startRealtimeListener();
+                initFullCalendar();
             } else { alert("Hatalı Giriş!"); }
         }
 
-        window.logoutLogic = function() { location.reload(); }
-        window.toggleDarkMode = function() { document.body.classList.toggle('dark-mode'); localStorage.setItem('darkMode', document.body.classList.contains('dark-mode')); }
-        
         window.switchView = function(id, btn) {
             document.querySelectorAll('.view-section').forEach(e=>e.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(e=>e.classList.remove('active'));
             document.getElementById('view-'+id).classList.add('active');
             btn.classList.add('active');
             
-            // Başlık Güncelle
-            const titles = { 'dashboard': 'Takvim', 'patients': 'Hastalar', 'finance': 'Finans', 'more': 'Diğer' };
-            document.getElementById('page-title').innerText = titles[id];
+            document.getElementById("page-title").innerText = btn.innerText.trim();
 
-            if(id==='patients') renderPatientList();
-            if(id==='dashboard' && calendar) setTimeout(() => calendar.render(), 100); 
+            if(id === 'patients') renderPatientList();
+            if(id === 'dashboard' && calendar) setTimeout(() => calendar.render(), 100);
         }
 
-        window.toggleRevenue = function(){
+        window.logoutLogic = function() { location.reload(); }
+        window.toggleDarkMode = function() { document.body.classList.toggle('dark-mode'); localStorage.setItem('darkMode', document.body.classList.contains('dark-mode')); }
+        if(localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
+
+        window.toggleRevenue = function() {
             const el = document.getElementById("fin-total");
-            if(el.innerText.includes("*")) el.innerText = el.getAttribute("data-val") + " ₺";
-            else el.innerText = "**** ₺";
-        }
-
-        window.autoSetEndTime = function() {
-            const start = document.getElementById("p-time").value;
-            if(start && !document.getElementById("p-end-time").value) {
-                document.getElementById("p-end-time").value = timeFromMinutes(minutesFromTime(start) + 30);
+            if(el.innerText.includes("*")) {
+                const total = patients.reduce((a,b) => a + (b.price || 0), 0);
+                el.innerText = total + " ₺";
+            } else {
+                el.innerText = "**** ₺";
             }
         }
 
-        // --- FIREBASE DATA ---
+        window.autoSetEndTime = function() {
+            const t = document.getElementById("p-time").value;
+            if(t) document.getElementById("p-end-time").value = timeFromMinutes(minutesFromTime(t) + 30);
+        }
+
+        // FIREBASE
         function startRealtimeListener() {
-            if(!db) return;
-            document.getElementById("loader").style.display = "flex";
             const q = query(collection(db, "patients"));
             onSnapshot(q, (snapshot) => {
                 patients = [];
-                snapshot.forEach((doc) => { let data = doc.data(); data.id = doc.id; patients.push(data); });
+                snapshot.forEach((doc) => { let d = doc.data(); d.id = doc.id; patients.push(d); });
                 
-                updateStats();
                 if(calendar) updateCalendarEvents();
                 if(document.getElementById('view-patients').classList.contains('active')) renderPatientList();
                 renderMissedList();
-                
-                document.getElementById("loader").style.display = "none";
             });
         }
 
-        function updateStats() {
-            document.getElementById("stat-active").innerText = patients.filter(p => p.status === 'bekliyor').length;
-            const todayStr = new Date().toISOString().split('T')[0];
-            document.getElementById("stat-today").innerText = patients.filter(p => p.date === todayStr).length;
-            
-            const total = patients.reduce((a,b) => a + (b.price || 0), 0);
-            document.getElementById("fin-total").setAttribute("data-val", total);
-            // Default hidden
-            document.getElementById("fin-total").innerText = "**** ₺";
-        }
-
-        // --- CALENDAR (MOBILE OPTIMIZED & TAP-TO-ADD) ---
+        // FULLCALENDAR (MOBILE TAP FIX)
         function initFullCalendar() {
             var calendarEl = document.getElementById('calendar');
             calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'timeGridDay', 
+                initialView: 'timeGridDay',
                 locale: 'tr',
-                headerToolbar: {
-                    left: 'prev,next',
-                    center: 'title',
-                    right: 'timeGridDay,dayGridMonth'
-                },
+                headerToolbar: { left: 'prev,next', center: 'title', right: 'timeGridDay,dayGridMonth' },
                 slotMinTime: '08:00:00',
                 slotMaxTime: '22:00:00',
                 allDaySlot: false,
@@ -472,24 +380,26 @@
                 nowIndicator: true,
                 selectable: true,
                 editable: true,
-                longPressDelay: 300, 
-                
-                // EVENT CLICKS
+                longPressDelay: 0, // DOKUNUR DOKUNMAZ TEPKİ VER (Tap Fix)
+                selectLongPressDelay: 0, // SEÇİM İÇİN DE GECİKME YOK
+
                 eventClick: function(info) { openEdit(info.event.id); },
                 
-                // DOKUNARAK EKLEME (FIXED)
-                dateClick: function(info) {
-                    // Tek dokunuşla ekleme
-                    const dateStr = info.dateStr.split('T')[0];
-                    const timeStr = info.dateStr.split('T')[1].substring(0,5);
+                // BOŞ ALANA TIKLAMA
+                select: function(info) {
+                    const dateStr = info.startStr.split('T')[0];
+                    const timeStr = info.startStr.split('T')[1].substring(0,5);
                     openAddModal(dateStr, timeStr);
                 },
-                select: function(info) {
-                    // Sürükleyerek seçim
-                    openAddModal(info.startStr.split('T')[0], info.startStr.split('T')[1].substring(0,5));
+                dateClick: function(info) {
+                    // Ekstra güvenlik: dateClick de modal açsın
+                    if(info.view.type.includes('timeGrid')) {
+                         const dateStr = info.dateStr.split('T')[0];
+                         const timeStr = info.dateStr.split('T')[1].substring(0,5);
+                         openAddModal(dateStr, timeStr);
+                    }
                 },
 
-                // DRAG & DROP
                 eventDrop: async function(info) {
                     const newDate = info.event.start.toISOString().split('T')[0];
                     const newTime = info.event.start.toTimeString().split(' ')[0].substring(0,5);
@@ -508,86 +418,70 @@
 
         function updateCalendarEvents() {
             if(!calendar) return;
-            const events = patients.filter(p => p.status !== 'gelmedi').map(p => {
-                let startT = `${p.date}T${p.time}:00`;
-                let endT = p.endTime ? `${p.date}T${p.endTime}:00` : null;
-                return {
-                    id: p.id,
-                    title: `${p.name} ${p.surname}`,
-                    start: startT,
-                    end: endT,
-                    backgroundColor: doctorColors[p.doctor] || '#f59e0b',
-                    borderColor: 'transparent',
-                    textColor: '#fff'
-                };
-            });
+            const events = patients.filter(p => p.status !== 'gelmedi').map(p => ({
+                id: p.id,
+                title: `${p.name} ${p.surname}`,
+                start: `${p.date}T${p.time}:00`,
+                end: p.endTime ? `${p.date}T${p.endTime}:00` : null,
+                backgroundColor: doctorColors[p.doctor] || '#f59e0b',
+                borderColor: 'transparent'
+            }));
             calendar.removeAllEvents();
             calendar.addEventSource(events);
         }
 
-        // --- PATIENT LIST (FIXED SCROLL) ---
+        // LISTS
         window.renderPatientList = function() {
             const container = document.getElementById("patient-list-container");
             const filter = document.querySelector("#view-patients input").value.toLowerCase();
-            
             let html = "";
             const filtered = patients.filter(p => (p.name + " " + p.surname + " " + p.tc).toLowerCase().includes(filter));
             
-            if(filtered.length === 0) {
-                container.innerHTML = "<div style='text-align:center; padding:20px; color:var(--text-muted);'>Kayıt bulunamadı.</div>";
-                return;
-            }
+            if(filtered.length === 0) { container.innerHTML = "<div style='text-align:center; padding:20px; color:#999;'>Kayıt yok.</div>"; return; }
 
             filtered.forEach(p => {
-                let badgeColor = p.status === 'bitti' ? 'var(--success)' : (p.status === 'iptal' ? 'var(--danger)' : 'var(--primary)');
+                let color = p.status === 'bitti' ? 'var(--success)' : (p.status === 'iptal' ? 'var(--danger)' : 'var(--primary)');
                 html += `
                 <div class="patient-item" onclick="openEdit('${p.id}')">
                     <div class="p-info">
                         <span class="p-name">${p.name} ${p.surname}</span>
-                        <span class="p-detail"><i class="ph-fill ph-calendar"></i> ${p.date} &nbsp; <i class="ph-fill ph-clock"></i> ${p.time}</span>
-                        <span class="p-detail" style="color:var(--primary); font-size:11px;">Dr. ${p.doctor}</span>
+                        <span class="p-detail">${p.date} | ${p.time}</span>
                     </div>
-                    <div>
-                        <span style="background:${badgeColor}; color:white; padding:4px 8px; border-radius:8px; font-size:11px;">${p.status}</span>
-                        <i class="ph-bold ph-caret-right" style="color:var(--border); margin-left:5px;"></i>
-                    </div>
+                    <span style="background:${color}; color:white; padding:3px 8px; border-radius:6px; font-size:11px;">${p.status}</span>
                 </div>`;
             });
             container.innerHTML = html;
         }
-        
         window.filterPatients = function() { renderPatientList(); }
 
         window.renderMissedList = function() {
             const container = document.getElementById("missed-list-container");
             const missed = patients.filter(p => p.status === 'gelmedi');
-            if(missed.length === 0) {
-                container.innerHTML = "<small style='color:var(--text-muted)'>Yok</small>";
-                return;
-            }
-            container.innerHTML = missed.map(p => `
+            container.innerHTML = missed.length ? missed.map(p => `
                 <div class="patient-item">
-                    <span>${p.name} ${p.surname} <br> <small style="color:var(--danger)">${p.date}</small></span>
-                    <button class="btn btn-danger" style="width:auto; padding:5px 10px; font-size:12px;" onclick="deletePatient('${p.id}')">Sil</button>
-                </div>
-            `).join('');
+                    <span>${p.name} ${p.surname} <br> <small style="color:red">${p.date}</small></span>
+                    <button class="btn btn-danger" style="width:auto; padding:5px 10px;" onclick="deletePatient('${p.id}')">Sil</button>
+                </div>`).join('') : "<div style='padding:10px; color:#999;'>Yok</div>";
         }
 
-        // --- FORM & MODAL ---
-        window.openAddModal = function(d, t){ 
-            resetForm(); 
-            document.getElementById("patient-modal").style.display="flex"; 
+        // MODAL & CRUD
+        window.openAddModal = function(d, t) {
+            document.getElementById("patient-form").reset();
+            document.getElementById("p-id").value = "";
             document.getElementById("btn-delete").classList.add("hidden");
-            if(d) document.getElementById("p-date").value = d; 
+            document.getElementById("p-doctor").value = currentDoctor;
+            
+            if(d) document.getElementById("p-date").value = d;
             if(t) {
                 document.getElementById("p-time").value = t;
                 document.getElementById("p-end-time").value = timeFromMinutes(minutesFromTime(t) + 30);
             }
+            document.getElementById("patient-modal").style.display = "flex";
         }
 
-        window.openEdit = function(id){
+        window.openEdit = function(id) {
             const p = patients.find(x => x.id == id);
-            if(p){
+            if(p) {
                 document.getElementById("p-id").value = p.id;
                 document.getElementById("p-name").value = p.name;
                 document.getElementById("p-surname").value = p.surname;
@@ -600,31 +494,15 @@
                 document.getElementById("p-price").value = p.price || "";
                 document.getElementById("p-notes").value = p.notes || "";
                 
-                tempTeeth = p.teeth || {};
-                renderTeeth(); renderProcList();
                 toggleFin(p.status);
-
                 document.getElementById("btn-delete").classList.remove("hidden");
-                document.getElementById("patient-modal").style.display="flex";
+                document.getElementById("patient-modal").style.display = "flex";
             }
         }
 
-        window.closeModal = function(id) { document.getElementById(id).style.display="none"; }
-        
-        window.resetForm = function() { 
-            document.getElementById("patient-form").reset(); 
-            document.getElementById("p-id").value=""; 
-            tempTeeth={}; renderTeeth(); renderProcList(); 
-            toggleFin('bekliyor');
-            document.getElementById("p-doctor").value = currentDoctor;
-        }
+        window.closeModal = function(id) { document.getElementById(id).style.display = "none"; }
+        window.toggleFin = function(v) { document.getElementById("fin-box").classList.toggle("hidden", v !== 'bitti'); }
 
-        window.toggleFin = function(v){ 
-            if(v === 'bitti') document.getElementById("fin-box").classList.remove("hidden");
-            else document.getElementById("fin-box").classList.add("hidden");
-        }
-
-        // --- DATABASE OPERATIONS ---
         window.savePatient = async function() {
             const id = document.getElementById("p-id").value;
             const newP = {
@@ -637,17 +515,12 @@
                 doctor: document.getElementById("p-doctor").value,
                 status: document.getElementById("p-status").value,
                 price: Number(document.getElementById("p-price").value),
-                teeth: tempTeeth,
                 notes: document.getElementById("p-notes").value
             };
-
-            document.getElementById("loader").style.display = "flex";
-            try {
-                if(id) await updateDoc(doc(db, "patients", id), newP);
-                else await addDoc(collection(db, "patients"), newP);
-                closeModal('patient-modal');
-            } catch(e) { console.error(e); alert("Hata!"); }
-            document.getElementById("loader").style.display = "none";
+            
+            if(id) await updateDoc(doc(db, "patients", id), newP);
+            else await addDoc(collection(db, "patients"), newP);
+            closeModal('patient-modal');
         }
 
         window.deleteCurrentP = async function() {
@@ -656,58 +529,17 @@
             closeModal('patient-modal');
         }
 
-        window.deletePatient = async function(id) { 
-            if(confirm("Silmek istediğine emin misin?")){ 
-                await deleteDoc(doc(db, "patients", id)); 
-            } 
-        }
-
-        // --- TEETH LOGIC ---
-        function initUI() {
-            if(localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
-            renderTeeth();
-        }
-
-        function renderTeeth() {
-            const container = document.querySelector(".teeth-container");
-            container.innerHTML = "";
-            for(let i=1; i<=32; i++) {
-                let cls = "tooth";
-                if(activeTooth === i) cls += " selected";
-                if(tempTeeth[i]) cls += " has-proc";
-                container.innerHTML += `<div class="${cls}" onclick="selTooth(${i})">${i}</div>`;
-            }
-        }
-
-        window.selTooth = function(n) {
-            activeTooth = n;
-            renderTeeth();
-            document.getElementById("tooth-action").classList.remove("hidden");
-            document.getElementById("sel-tooth-lbl").innerText = "Diş #" + n;
-        }
-
-        window.assignProc = function() {
-            if(activeTooth) {
-                const v = document.getElementById("tooth-proc").value;
-                if(!tempTeeth[activeTooth]) tempTeeth[activeTooth]=[];
-                tempTeeth[activeTooth].push(v);
-                renderTeeth(); renderProcList();
-            }
-        }
-
-        function renderProcList() {
-            document.getElementById("proc-list").innerHTML = Object.entries(tempTeeth).map(([k,v])=>`#${k}: ${v.join(', ')}`).join(' | ');
+        window.deletePatient = async function(id) {
+            if(confirm("Silmek istediğine emin misin?")) await deleteDoc(doc(db, "patients", id));
         }
 
         window.searchPatientByTC = function(val) {
-            // Basit arama mantığı
             const p = patients.find(x => x.tc === val);
             if(p) {
                 document.getElementById("p-name").value = p.name;
                 document.getElementById("p-surname").value = p.surname;
             }
         }
-
     </script>
 </body>
 </html>
